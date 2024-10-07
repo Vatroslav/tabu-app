@@ -2,7 +2,7 @@ Welcome to Tabu! We appreciate your interest in contributing to our project.
 
 ## Community
 
-We value a positive and inclusive environment. This project adheres to the Contributor Covenant code of conduct. Please review it before participating.
+We value a positive and inclusive environment. This project adheres to the Contributor Covenant code of conduct [code of conduct](./CODE_OF_CONDUCT.md). Please review it before participating.
 If you encounter unacceptable behavior, report it to vatroslav.mileusnic@tabu.hr.
 
 ## Reporting Issues
