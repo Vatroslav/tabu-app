@@ -1,4 +1,6 @@
 # Documentation of Changes
+### 1/22/2025
+- Created `package.json` file with initial configuration for the Vue.js project.
 
 ## Overview
 This documentation outlines the changes made to set up a Vue.js frontend with an OAuth login page and email verification via an external API with CORS enabled.
@@ -151,4 +153,3 @@ VUE_APP_API_PORT=443
 ```
 
 ## Summary
-The project has been set up with a basic structure for a Vue.js frontend with an OAuth login page and email verification via an external API with CORS enabled. The environment variables for the API address and port are stored in the `.env` file and used in the `Login.vue` component.
