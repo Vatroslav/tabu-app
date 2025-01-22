@@ -1,16 +1,9 @@
-
-Todo:
-  ✔ Riješiti Cline. @done(25-01-22 10:34)
-  ✔ Napraviti si čisti projekt, bez mf-ovih dodatatak. @done(25-01-22 10:34)
-
-Cline:
-  ✔ Upogoniti CLine. Trenutno mi baca "API Request Failed" error. @done(25-01-22 10:34)
-  ☐ Napraviti novi kod. Neka Cline piše dokumentaciju dok radi kod.
-  ☐ Testirati kod.
-  ☐ Deployati kod?
+TODO:
+  ☐ Surađivati s Nimesinom i vidjeti kako to ide.
 
 Pythagora:
   ☐ Za izradu aplikacije bi ju trebalo baš platiti jer inače ima premalo tokena.
+    ☐ Javio mi se Zvonimir pa moram odlučiti što ću s time.
 
 Nimesin upute:
   - Napraviti svoj fork na GitHubu.
@@ -22,11 +15,13 @@ Nimesin upute:
     - port koji se  bude vrtio isto nek vuče iz .env
     - i kreiraj doc/ folder i reci mu nek unutra uvijek piše dokumentaciju štoi je radio
   
-
-
 Kako pokrenuti Cline:
   - Prvo treba pokrenuti LiteLLM uz pomoć ove komande: litellm --model mistral/mistral-large-latest
   - Potencijalno prije toga treba postaviti API key komandom, ali mislim da se to ne koristi: $env:MISTRAL_API_KEY="ovdje_ide_moj_api_key"
+
+Što sam još sređivao:
+  - Run this command in powershell as admin: Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+    - Allows PowerShell scripts that are created on your local machine to run without needing a digital signature.
 
 Shortucts:
   - Ctrl/Alt+Enter = Toggle todo's box symbol
@@ -36,6 +31,12 @@ Shortucts:
   - Ctrl+Shift+A = Archive finished todos
 
 Archive:
+  ✔ Riješiti Cline. @done(25-01-22 10:34) @project(Todo)
+  ✔ Napraviti si čisti projekt, bez mf-ovih dodatatak. @done(25-01-22 10:34) @project(Todo)
+  ✔ Upogoniti CLine. Trenutno mi baca "API Request Failed" error. @done(25-01-22 10:34) @project(Cline)
+  ✔ Napraviti novi kod. Neka Cline piše dokumentaciju dok radi kod. @done(25-01-22 11:11) @project(Cline)
+  ✔ Testirati kod. @done(25-01-22 11:11) @project(Cline)
+  ✔ Deployati kod? @done(25-01-22 11:11) @project(Cline)
   ✔ Cline @started(25-01-17 14:33) @done(25-01-18 18:28) @lasted(1d3h55m4s) @project(Todo)
   ✔ Koji API koristiti? OpenRouter ili OpenAI → Nimesin savjetovao Mistral. On ga koristi i free je. @started(25-01-17 15:53) @done(25-01-18 18:28) @lasted(1d2h35m) @project(Todo)
   ✔ Čekam SMS da verificiram Mistral kako bih mogao dobiti API key @done(25-01-18 18:26) @project(Todo)

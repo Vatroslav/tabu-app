@@ -9,9 +9,24 @@
 export default {
   name: 'EmailVerification',
   mounted() {
-    // Implement email verification logic here
-    console.log('Email verification');
-  },
+    const apiRoute = process.env.API_ROUTE;
+    const email = 'user@example.com'; // Replace with actual email
+    fetch(`${apiRoute}/user/check`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*' // Handle CORS
+      },
+      body: JSON.stringify({ email })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Email verification response:', data);
+    })
+    .catch(error => {
+      console.error('Email verification error:', error);
+    });
+  }
 };
 </script>
 

@@ -1,11 +1,15 @@
 # Documentation of Changes
-### 1/22/2025
-- Created `package.json` file with initial configuration for the Vue.js project.
 
 ## Overview
 This documentation outlines the changes made to set up a Vue.js frontend with an OAuth login page and email verification via an external API with CORS enabled.
 
-## Files Created
+### 2025-01-22
+- Updated `VUE_APP_API_ADDRESS` to `https://api.beta.tabu.nimes.ink` in `.env`.
+- Added `API_ROUTE=/api` to `.env`.
+- Updated `src/views/EmailVerification.vue` to include email validation route and CORS handling.
+- Created `package.json` file with initial configuration for the Vue.js project.
+
+## 2025-01-21 Files Created
 
 ### 1. `src/main.js`
 This file initializes the Vue.js application and sets up the router.
