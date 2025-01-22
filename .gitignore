@@ -6,9 +6,6 @@ yarn-error.log*
 
 # Vue.js
 dist/
-.env
-.env.local
-.env.*.local
 
 # Logs
 logs
@@ -72,7 +69,8 @@ web_modules/
 .env.test
 .env.production
 .env.development
-.env
+.env.local
+.env.*.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
