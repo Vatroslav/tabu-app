@@ -3,6 +3,32 @@
 ## Overview
 This documentation outlines the changes made to set up a Vue.js frontend with an OAuth login page and email verification via an external API with CORS enabled.
 
+### 2025-01-23
+- Created `tsconfig.json` file with the following content:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"]
+}
+```
+
+This configuration sets up TypeScript with strict type checking and other common settings.
+
+- Created `src/example.ts` file with the following content:
+
+```typescript
+// This is a simple TypeScript file to resolve the tsconfig.json error
+console.log("TypeScript is working!");
+```
+
 ### 2025-01-22
 - Created `package.json` file with initial configuration for the Vue.js project.
 - Updated `VUE_APP_API_ADDRESS` to `https://api.beta.tabu.nimes.ink` in `.env`.
@@ -145,15 +171,3 @@ export default {
   justify-content: center;
   height: 100vh;
 }
-</style>
-```
-
-### 6. `.env`
-This file contains environment variables for the API address and port.
-
-```
-VUE_APP_API_ADDRESS=https://api.example.com
-VUE_APP_API_PORT=443
-```
-
-## Summary
