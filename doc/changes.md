@@ -1,3 +1,48 @@
+### 2025-01-23 (Continued)
+- Updated `src/main.js` to use Vue 2 syntax:
+
+```javascript
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+
+new Vue({
+  router,
+  render: h => h(App)
+}).$mount('#app');
+```
+
+- Updated `src/router/index.js` to use Vue 2 syntax:
+
+```javascript
+import Vue from 'vue';
+import Router from 'vue-router';
+import Login from '../views/Login.vue';
+import EmailVerification from '../views/EmailVerification.vue';
+
+const routes = [
+  {
+    path: '/',
+    name: 'Login',
+    component: Login,
+  },
+  {
+    path: '/verify-email',
+    name: 'EmailVerification',
+    component: EmailVerification,
+  },
+];
+
+Vue.use(Router);
+
+const router = new Router({
+  mode: 'history',
+  routes,
+});
+
+export default router;
+```
+
 # Documentation of Changes
 
 ## Overview
