@@ -1,84 +1,7 @@
-### 2025-01-23 (Continued)
-- Updated `src/main.js` to use Vue 2 syntax:
-
-```javascript
-import Vue from 'vue';
-import App from './App.vue';
-import router from './router';
-
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app');
-```
-
-- Updated `src/router/index.js` to use Vue 2 syntax:
-
-```javascript
-import Vue from 'vue';
-import Router from 'vue-router';
-import Login from '../views/Login.vue';
-import EmailVerification from '../views/EmailVerification.vue';
-
-const routes = [
-  {
-    path: '/',
-    name: 'Login',
-    component: Login,
-  },
-  {
-    path: '/verify-email',
-    name: 'EmailVerification',
-    component: EmailVerification,
-  },
-];
-
-Vue.use(Router);
-
-const router = new Router({
-  mode: 'history',
-  routes,
-});
-
-export default router;
-```
-
 # Documentation of Changes
 
 ## Overview
 This documentation outlines the changes made to set up a Vue.js frontend with an OAuth login page and email verification via an external API with CORS enabled.
-
-### 2025-01-23
-- Created `tsconfig.json` file with the following content:
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  "include": ["src/**/*"]
-}
-```
-
-This configuration sets up TypeScript with strict type checking and other common settings.
-
-- Created `src/example.ts` file with the following content:
-
-```typescript
-// This is a simple TypeScript file to resolve the tsconfig.json error
-console.log("TypeScript is working!");
-```
-
-### 2025-01-22
-- Created `package.json` file with initial configuration for the Vue.js project.
-- Updated `VUE_APP_API_ADDRESS` to `https://api.beta.tabu.nimes.ink` in `.env`.
-- Added `API_ROUTE=/api` to `.env`.
-- Updated `src/views/EmailVerification.vue` to include email validation route and CORS handling.
 
 ## 2025-01-21 Files Created
 
@@ -216,3 +139,90 @@ export default {
   justify-content: center;
   height: 100vh;
 }
+</style>
+```
+
+### 6. `.env`
+This file contains environment variables for the API address and port.
+
+### Summary
+The project has been set up with a basic structure for a Vue.js frontend with an OAuth login page and email verification via an external API with CORS enabled. The environment variables for the API address and port are stored in the `.env` file and used in the `Login.vue` component.
+
+
+## 2025-01-22
+- Created `package.json` file with initial configuration for the Vue.js project.
+- Updated `VUE_APP_API_ADDRESS` to `https://api.beta.tabu.nimes.ink` in `.env`.
+- Added `API_ROUTE=/api` to `.env`.
+- Updated `src/views/EmailVerification.vue` to include email validation route and CORS handling.
+
+## 2025-01-23
+- Created `tsconfig.json` file with the following content:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"]
+}
+```
+
+This configuration sets up TypeScript with strict type checking and other common settings.
+
+- Created `src/example.ts` file with the following content:
+
+```typescript
+// This is a simple TypeScript file to resolve the tsconfig.json error
+console.log("TypeScript is working!");
+```
+
+- Updated `src/main.js` to use Vue 2 syntax:
+
+```javascript
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+
+new Vue({
+  router,
+  render: h => h(App)
+}).$mount('#app');
+```
+
+- Updated `src/router/index.js` to use Vue 2 syntax:
+
+```javascript
+import Vue from 'vue';
+import Router from 'vue-router';
+import Login from '../views/Login.vue';
+import EmailVerification from '../views/EmailVerification.vue';
+
+const routes = [
+  {
+    path: '/',
+    name: 'Login',
+    component: Login,
+  },
+  {
+    path: '/verify-email',
+    name: 'EmailVerification',
+    component: EmailVerification,
+  },
+];
+
+Vue.use(Router);
+
+const router = new Router({
+  mode: 'history',
+  routes,
+});
+
+export default router;
+```
+
+- Switched to Vue 3
