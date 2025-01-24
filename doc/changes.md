@@ -226,3 +226,9 @@ export default router;
 ```
 
 - Switched to Vue 3
+
+## 2025-01-24
+- Changes to Install CORS:
+  - **EmailVerification.vue**: Updated to handle CORS headers.
+  - **server.js**: Created for Express.js to include CORS middleware.
+  - **package.json**: Added CORS package as a dependency.

@@ -15,7 +15,6 @@ export default {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*' // Handle CORS
       },
       body: JSON.stringify({ email })
     })
