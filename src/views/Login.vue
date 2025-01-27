@@ -29,7 +29,7 @@ export default {
           .initCodeClient({
             client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
             scope: 'email profile openid',
-            redirect_uri: 'http://localhost:8080/callback',
+            redirect_uri: process.env.VUE_APP_OAUTH_REDIRECT_URI,
             callback: response => {
               if (response.code) {
                 this.sendCodeToBackend(response.code);

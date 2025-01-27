@@ -21,13 +21,13 @@ export default {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         if (code) {
-          const response = await axios.post('https://oauth2.googleapis.com/token', {
-            code,
-            client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
-            client_secret: process.env.VUE_APP_OAUTH_CLIENT_SECRET,
-            redirect_uri: 'http://localhost:8080/callback',
-            grant_type: 'authorization_code'
-          });
+const response = await axios.post('https://oauth2.googleapis.com/token', {
+  code,
+  client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
+  client_secret: process.env.VUE_APP_OAUTH_CLIENT_SECRET,
+  redirect_uri: process.env.VUE_APP_OAUTH_REDIRECT_URI,
+  grant_type: 'authorization_code'
+});
 
           const accessToken = response.data.access_token;
           console.log(accessToken);
