@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <img src="/tabu_small_logo.webp" alt="Tabu Small Logo" class="small-logo-login" />
     <h1>Login to your Tabu account</h1>
     <button @click="login" class="gsi-material-button" style="width:400">
       <div class="gsi-material-button-state"></div>
@@ -96,6 +97,17 @@ export default {
   align-items: center;
   justify-content: center;
   height: 100vh;
+}
+
+.small-logo-login {
+  top: calc(50% - 150px); /* Adjust this value to position the logo slightly above the text */
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .small-logo-login {
+    display: none;
+  }
 }
 
 .gsi-material-button {

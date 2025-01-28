@@ -6,7 +6,7 @@ import GAuth from 'vue3-google-login';
 const app = createApp(App);
 
 const gauthOption = {
-  clientId: process.env.VUE_APP_OAUTH_CLIENT_ID,
+  clientId: typeof process !== 'undefined' ? process.env.VUE_APP_OAUTH_CLIENT_ID : '',
   scope: 'profile email',
   prompt: 'select_account'
 };

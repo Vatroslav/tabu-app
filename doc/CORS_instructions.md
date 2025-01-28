@@ -105,10 +105,70 @@ init();
 
 ## General Instructions
 
-1. **Identify the Server**: Determine which server or backend service is handling the API requests for the Vue.js application.
-2. **Set CORS Headers**: Add the necessary CORS headers to the server's response. The typical headers include:
-   - `Access-Control-Allow-Origin`: Specifies the origin that is allowed to access the resource.
-   - `Access-Control-Allow-Methods`: Specifies the methods allowed when accessing the resource.
-   - `Access-Control-Allow-Headers`: Specifies the headers that can be used when making the actual request.
+1. **Identify the Server**: The project is using Express.js as the server framework.
+2. **Set CORS Headers**: The `cors` middleware is used to enable CORS for all origins. The server code is configured as follows:
+
+```javascript
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+app.use(cors());
+
+app.get('/api/endpoint', (req, res) => {
+  res.json({ message: 'This is CORS-enabled for all origins!' });
+});
+
+app.listen(3000, () => {
+  console.log('CORS-enabled web server listening on port 3000');
+});
+```
+
+3. **Client-Side CORS Handling**: The client-side code in `src/views/EmailVerification.vue` makes a fetch request to the API endpoint for email verification. The request includes the `Content-Type` header set to `application/json`.
+
+```vue
+<template>
+  <div class="email-verification">
+    <h1>Email Verification</h1>
+    <p>Please check your email for the verification link.</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'EmailVerification',
+  mounted() {
+    const apiRoute = process.env.API_ROUTE;
+    const email = 'user@example.com'; // Replace with actual email
+    fetch(`${apiRoute}/user/check`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Email verification response:', data);
+    })
+    .catch(error => {
+      console.error('Email verification error:', error);
+    });
+  }
+};
+</script>
+
+<style scoped>
+.email-verification {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+</style>
+```
+
+Please follow the appropriate example based on the server framework you are using. If you need further assistance or have any questions, feel free to ask.
 
 Please follow the appropriate example based on the server framework you are using. If you need further assistance or have any questions, feel free to ask.
