@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <img src="/tabu_small_logo_app.webp" alt="Tabu Small Logo" class="small-logo-app" />
+    <img src="/tabu_small_logo_app.webp" alt="Tabu Logo" class="small-logo-app" />
   </nav>
 </template>
 

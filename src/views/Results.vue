@@ -42,53 +42,107 @@ export default {
   padding-left: 20px;
 }
 
-h1 {
-  font-size: 48px;
-  font-weight: bold;
-  color: #333333;
-  position: relative;
-  display: inline-block;
-  margin-bottom: 10px;
+@media (min-width: 768px) {
+  h1 {
+    font-size: 48px;
+    font-weight: bold;
+    color: #333333;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 50px;
+  }
+
+  h1::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 10px;
+    z-index: -1;
+    background-color: #D9FF80;
+  }
+
+  .salary-container {
+    display: flex;
+    flex-direction: column;
+    width: fit-content; /* Container width becomes text size */
+  }
+
+  .label {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 5px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .salary {
+    font-size: 72px;
+    font-weight: bold;
+    color: #FF9883;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .salary-label {
+    font-size: 18px;
+    color: #333333;
+    margin-top: 5px;
+    text-align: right; /* Aligns right within the container */
+  }
 }
 
-h1::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 10px;
-  z-index: -1;
-  background-color: #D9FF80;
-}
+@media (max-width: 768px) {
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 50px;
+  }
 
-.salary-container {
-  display: flex;
-  flex-direction: column;
-  width: fit-content; /* Container width becomes text size */
-}
+  h1::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 5px;
+    z-index: -1;
+    background-color: #D9FF80;
+  }
 
-.label {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333333;
-  margin-bottom: 5px;
-  margin: 0;
-  line-height: 1;
-}
+  .salary-container {
+    display: flex;
+    flex-direction: column;
+    width: fit-content; /* Container width becomes text size */
+  }
 
-.salary {
-  font-size: 72px;
-  font-weight: bold;
-  color: #FF9883;
-  margin: 0;
-  line-height: 1;
-}
+  .label {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 5px;
+    margin: 0;
+    line-height: 1;
+  }
 
-.salary-label {
-  font-size: 18px;
-  color: #333333;
-  margin-top: 5px;
-  text-align: right; /* Aligns right within the container */
+  .salary {
+    font-size: 48px;
+    font-weight: bold;
+    color: #FF9883;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .salary-label {
+    font-size: 12px;
+    color: #333333;
+    margin-top: 5px;
+    text-align: right; /* Aligns right within the container */
+  }
 }
 </style>
