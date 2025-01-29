@@ -1,7 +1,7 @@
 # Navbar Changes
 
 ## Overview
-Created a new navbar component and added it to the Results page. Ensured the navbar is not visible on the Login page. Moved the small logo from the Results page to the navbar. Moved the CSS for the logo from the Results page to the navbar component. Ensured the Navbar component is correctly imported and used in the Results page. Corrected the template structure in the Results page. Removed the links from the navbar. Updated the navbar styles to set the background color to white, position it behind the big logo from index.html, and set the height to 57px. Adjusted the z-index of the navbar to -2 and set its position to absolute with top: 0, left: 0, and width: 100%.
+Created a new navbar component and added it to the Results page. Ensured the navbar is not visible on the Login page. Moved the small logo from the Results page to the navbar. Moved the CSS for the logo from the Results page to the navbar component. Ensured the Navbar component is correctly imported and used in the Results page. Corrected the template structure in the Results page. Removed the links from the navbar. Updated the navbar styles to set the background color to white, position it behind the big logo from index.html, and set the height to 77px. Adjusted the z-index of the navbar to -2 and set its position to absolute with top: 0, left: 0, and width: 100%. Moved the content of the Results page to begin below the navbar, ensuring no content overlaps with the navbar. Increased the margin to 97px to ensure the content is not stuck to the navbar.
 
 ## Changes Made
 1. Created a new navbar component (`src/components/Navbar.vue`).
@@ -14,6 +14,8 @@ Created a new navbar component and added it to the Results page. Ensured the nav
 8. Removed the links from the navbar.
 9. Updated the navbar styles to set the background color to white, position it behind the big logo from index.html, and set the height to 77px.
 10. Adjusted the z-index of the navbar to -2 and set its position to absolute with top: 0, left: 0, and width: 100%.
+11. Moved the content of the Results page to begin below the navbar, ensuring no content overlaps with the navbar.
+12. Increased the margin to 97px to ensure the content is not stuck to the navbar.
 
 ## Files Modified
 - `src/components/Navbar.vue`
@@ -46,23 +48,14 @@ nav {
   width: 100%;
 }
 
-@media (max-width: 768px) {
-  .small-logo-app {
-    top: calc(50% - 150px); /* Adjust this value to position the logo slightly above the text */
-    text-align: center;
-  }
-}
-
-@media (min-width: 768px) {
-  .small-logo-app {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    max-height: 50vh;
-    max-width: 50vw;
-    z-index: 1;
-    padding: 10px;
-  }
+.small-logo-app {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  max-height: 50vh;
+  max-width: 50vw;
+  z-index: 1;
+  padding: 10px;
 }
 </style>
 ```
@@ -102,6 +95,10 @@ export default {
 </script>
 
 <style scoped>
+.results {
+  margin-top: 97px; /* Adjust this value to ensure content starts below the navbar */
+}
+
 h1 {
   color: #42b983;
 }

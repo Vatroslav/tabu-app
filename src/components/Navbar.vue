@@ -36,22 +36,13 @@ a {
   text-decoration: none;
 }
 
-@media (max-width: 768px) {
-  .small-logo-app {
-    top: calc(50% - 150px); /* Adjust this value to position the logo slightly above the text */
-    text-align: center;
-  }
-}
-
-@media (min-width: 768px) {
-  .small-logo-app {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    max-height: 50vh;
-    max-width: 50vw;
-    z-index: 1;
-    padding: 10px;
-  }
+.small-logo-app {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  max-height: 50vh;
+  max-width: 50vw;
+  z-index: 1;
+  padding: 10px;
 }
 </style>

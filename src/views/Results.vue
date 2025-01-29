@@ -15,6 +15,12 @@
   </div>
 </template>
 
+<style scoped>
+.results {
+  margin-top: 97px; /* Adjust this value to ensure content starts below the navbar */
+}
+</style>
+
 <script>
 import { mapState } from 'vuex';
 import Navbar from '@/components/Navbar.vue';
