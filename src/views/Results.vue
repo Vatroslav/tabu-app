@@ -2,8 +2,13 @@
   <div>
     <Navbar />
     <div class="results">
-      <h1>Results Page</h1>
-      <p>Welcome to the Results page!</p>
+      <h1>My salary comparison</h1>
+      <p class="label">My salary</p>
+      <div class="salary-container">
+        <p class="salary">1,234€</p>
+        <p class="salary-label">net salary</p>
+      </div>
+
       <!--
       <div id="user_details" v-if="userDetails">
         <h2>User Details</h2>
@@ -14,12 +19,6 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-.results {
-  margin-top: 97px; /* Adjust this value to ensure content starts below the navbar */
-}
-</style>
 
 <script>
 import { mapState } from 'vuex';
@@ -37,7 +36,59 @@ export default {
 </script>
 
 <style scoped>
+.results {
+  margin-top: 97px; /* Adjust this value to ensure content starts below the navbar */
+  text-align: left;
+  padding-left: 20px;
+}
+
 h1 {
-  color: #42b983;
+  font-size: 48px;
+  font-weight: bold;
+  color: #333333;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 10px;
+  z-index: -1;
+  background-color: #D9FF80;
+}
+
+.salary-container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content; /* Container width becomes text size */
+}
+
+.label {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 5px;
+  margin: 0;
+  line-height: 1;
+}
+
+.salary {
+  font-size: 72px;
+  font-weight: bold;
+  color: #FF9883;
+  margin: 0;
+  line-height: 1;
+}
+
+.salary-label {
+  font-size: 18px;
+  color: #333333;
+  margin-top: 5px;
+  text-align: right; /* Aligns right within the container */
 }
 </style>
