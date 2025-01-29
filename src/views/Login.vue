@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <img src="/tabu_small_logo.webp" alt="Tabu Small Logo" class="small-logo-login" />
+    <img src="/tabu_small_logo_login.webp" alt="Tabu Small Logo" class="small-logo-login" />
     <h1>Login to your Tabu account</h1>
     <button @click="login" class="gsi-material-button" style="width:400">
       <div class="gsi-material-button-state"></div>
