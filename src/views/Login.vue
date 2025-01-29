@@ -18,18 +18,13 @@
         <span style="display: none;">Continue with Google</span>
       </div>
     </button>
-    <div v-if="userDetails">
-      <h2>User Details</h2>
-      <p>Name: {{ userDetails.name }}</p>
-      <p>Email: {{ userDetails.email }}</p>
-      <p>Profile Picture: <img :src="userDetails.picture" alt="Profile Picture"></p>
-    </div>
   </div>
 </template>
 
 <script>
 import { googleSdkLoaded } from 'vue3-google-login';
 import axios from 'axios';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Login',
@@ -39,6 +34,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['setUserDetails']),
     login() {
       googleSdkLoaded(google => {
         google.accounts.oauth2
@@ -66,7 +62,6 @@ export default {
         });
 
         const accessToken = response.data.access_token;
-        console.log(accessToken);
 
         // Fetch user details using the access token
         const userResponse = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
@@ -76,11 +71,15 @@ export default {
         });
 
         if (userResponse && userResponse.data) {
+        
+          console.log('entered if statement');
+
           // Set the userDetails data property to the userResponse object
           this.userDetails = userResponse.data;
-        } else {
-          // Handle the case where userResponse or userResponse.data is undefined
-          console.error('Failed to fetch user details.');
+          // Commit the userDetails to the Vuex store
+          this.setUserDetails(this.userDetails);
+          // Redirect to the Results page
+          this.$router.push('/results');
         }
       } catch (error) {
         console.error('Token exchange failed:', error.response.data);
@@ -99,14 +98,24 @@ export default {
   height: 100vh;
 }
 
-.small-logo-login {
-  top: calc(50% - 150px); /* Adjust this value to position the logo slightly above the text */
-  text-align: center;
+
+@media (max-width: 768px) {
+  .small-logo-login {
+    top: calc(50% - 150px); /* Adjust this value to position the logo slightly above the text */
+    text-align: center;
+  }
 }
+
 
 @media (min-width: 768px) {
   .small-logo-login {
-    display: none;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    max-height: 50vh;
+    max-width: 50vw;
+    z-index: 1;
+    padding: 10px;
   }
 }
 
@@ -200,7 +209,7 @@ export default {
   opacity: 38%;
 }
 
-.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+.gsi-material-button:not(:disabled):active .gsi-material-button-state,
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
   background-color: #303030;
   opacity: 12%;
