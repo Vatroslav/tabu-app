@@ -5,7 +5,7 @@
       <h1>My salary comparison</h1>
       <p class="label">My salary</p>
       <div class="salary-container">
-        <p class="salary">1,234€</p>
+        <p class="salary">1,234 €</p>
         <p class="salary-label">net salary</p>
       </div>
 
@@ -69,8 +69,7 @@ h1::after {
 .label {
   font-weight: bold;
   color: #333333;
-  margin-bottom: 5px;
-  margin: 0;
+  margin-bottom: 40px;
   line-height: 1;
 }
 
