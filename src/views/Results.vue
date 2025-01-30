@@ -3,8 +3,8 @@
     <Navbar />
     <div class="results">
       <h1>My salary comparison</h1>
-      <p class="label">My salary</p>
       <div class="salary-container">
+        <p class="label">My salary</p>
         <p class="salary">1,234 €</p>
         <p class="salary-label">net salary</p>
       </div>
