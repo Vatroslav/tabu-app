@@ -1,6 +1,7 @@
 # Personal files
 TODO
 .vscode/
+certs/
 
 # Node.js
 node_modules/
