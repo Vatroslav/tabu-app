@@ -75,6 +75,12 @@ web_modules/
 .env.development
 .env.local
 .env.*.local
+tabu-app/.env
+tabu-app/.env.test
+tabu-app/.env.production
+tabu-app/.env.development
+tabu-app/.env.local
+tabu-app/.env.*.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
