@@ -1,13 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabu App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabu App</title>
+</head>
+
+<body>
+  <img src="tabu_big_logo.webp" alt="Tabu Logo" class="big-logo" />
+  <img src="tabu_big_logo_mobile.webp" alt="Tabu Logo" class="big-logo-mobile" />
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
+
+
+<style>
+  body {
+    height: 100%;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #333333;
+    background-color: #f5F7EE;
+    overflow: hidden;
+    /* Prevents scrolling but is required only on the login page */
+  }
+
+  .big-logo {
+    position: absolute;
+    right: 0;
+    top: 0;
+    max-height: 100vh;
+    max-width: 100vw;
+    z-index: -1;
+  }
+
+  .big-logo-mobile {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    max-height: 100vh;
+    max-width: 100vw;
+    z-index: -1;
+  }
+
+  @media (max-width: 768px) {
+    .big-logo {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .big-logo-mobile {
+      display: none;
+    }
+  }
+</style>
