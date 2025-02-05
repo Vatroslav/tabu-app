@@ -3,7 +3,6 @@ import { decodeCredential, GoogleLogin } from 'vue3-google-login'
 import type { CallbackTypes } from 'vue3-google-login'
 import { loginWithGoogle } from '@/services/auth/google'
 import router from '@/router'
-import HomeItem from '@/components/HomeItem.vue'
 
 type GoogleUserData = {
   email: string
@@ -42,7 +41,6 @@ const callback: CallbackTypes.CredentialCallback = async response => {
       </div>
     </button>-->
     <GoogleLogin :callback="callback" prompt auto-login />
-    <HomeItem></HomeItem>
   </div>
 </template>
 
