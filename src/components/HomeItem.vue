@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import router from '@/router'
-import IconTabu from '@/components/icons/IconTabu.vue'
 
 type UserData = {
   name: string
@@ -21,6 +20,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <icon-tabu />
   <div>Logged in as {{ userData.name }}</div>
 </template>
