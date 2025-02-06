@@ -14,18 +14,25 @@ export default defineComponent({
         NavbarItem
     },
     setup() {
-        const userData = ref<UserData>({ name: '' });
+        const userData = ref<UserData>({ name: '' })
+
+        const logout = () => {
+            localStorage.removeItem('userData')
+            router.push('/login')
+        }
+
         onMounted(() => {
-            let localStorageString = localStorage.getItem('userData') ?? '';
+            let localStorageString = localStorage.getItem('userData') ?? ''
             if (localStorageString === '') {
-                router.push('/login');
+                router.push('/login')
             } else {
-                userData.value = JSON.parse(localStorageString) as UserData;
+                userData.value = JSON.parse(localStorageString) as UserData
             }
-        });
-        return { userData };
+        })
+
+        return { userData, logout }
     }
-});
+})
 </script>
 
 <template>
@@ -34,6 +41,7 @@ export default defineComponent({
         <div class="results">
             <h1>My salary comparison</h1>
             <p style="color: red;">Logged in as {{ userData.name }}.</p>
+            <button @click="logout">Logout</button>
             <!----------------- Filters ----------------->
             <div class="overall-filter-section">
                 <div class="filters">
@@ -127,7 +135,6 @@ export default defineComponent({
         </div>
     </div>
 </template>
-
 
 <style scoped>
 /* ----------------- General styles ----------------- */
