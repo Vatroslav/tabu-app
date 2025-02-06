@@ -303,7 +303,6 @@ h1::after {
 
 /* ----------------- Media queries ----------------- */
 
-/* Large screens */
 @media (min-width: 768px) {
 
     h1 {
@@ -364,7 +363,6 @@ h1::after {
     }
 }
 
-/* Mobile phones */
 @media (max-width: 768px) {
 
     h1 {

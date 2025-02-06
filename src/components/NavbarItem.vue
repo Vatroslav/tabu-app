@@ -7,11 +7,12 @@
 <style scoped>
 nav {
     background-color: white;
-    height: 84px;
     z-index: -2;
     position: absolute;
     top: 0;
     left: 0;
+    display: flex;
+    align-items: center;
     width: 100%;
 }
 
@@ -30,13 +31,24 @@ a {
     text-decoration: none;
 }
 
-.small-logo-app {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    max-height: 50vh;
-    max-width: 50vw;
-    z-index: 1;
-    padding: 10px;
+@media (max-width: 768px) {
+    nav {
+        height: 60px;
+    }
+
+    .small-logo-app {
+        padding: 25px;
+    }
+}
+
+
+@media (min-width: 768px) {
+    nav {
+        height: 84px;
+    }
+
+    .small-logo-app {
+        padding: 82px;
+    }
 }
 </style>
