@@ -34,12 +34,23 @@
 
 <style>
   body {
+    height: 100%;
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #333333;
     background-color: #f5F7EE;
+  }
+
+  .container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #app {
+    flex: 1;
   }
 
   .big-logo {

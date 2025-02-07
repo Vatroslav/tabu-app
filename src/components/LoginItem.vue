@@ -11,7 +11,7 @@ import { decodeCredential, GoogleLogin } from 'vue3-google-login'
 import type { CallbackTypes } from 'vue3-google-login'
 import { loginWithGoogle } from '@/services/auth/google'
 import router from '@/router'
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed } from 'vue';
 
 type GoogleUserData = {
   email: string
@@ -38,19 +38,6 @@ const callback: CallbackTypes.CredentialCallback = async response => {
 }
 
 const screenWidth = ref(window.innerWidth);
-
-const updateScreenWidth = () => {
-  screenWidth.value = window.innerWidth;
-};
-
-// Listen for window resize events
-onMounted(() => {
-  window.addEventListener('resize', updateScreenWidth);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updateScreenWidth);
-});
 
 const buttonConfig = computed(() => {
   let width = "500px"; // Default width for desktops
