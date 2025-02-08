@@ -212,7 +212,6 @@ h1::after {
 }
 
 .filter-row label {
-    width: 120px;
     padding: 8px;
     margin-top: 0px;
 }
@@ -241,6 +240,7 @@ h1::after {
     background-color: #f5F7EE;
     color: #969694;
     box-shadow: inset 0 0 0 1px #969694;
+    border-radius: 3px;
 }
 
 .seniority-row {
@@ -258,7 +258,7 @@ h1::after {
     flex: 1;
     padding: 8px;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     background-color: white;
     cursor: pointer;
 }
@@ -298,7 +298,6 @@ h1::after {
 .overall-data-section {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 50px;
 }
 
 /* ----------------- My salary ----------------- */
@@ -333,8 +332,6 @@ h1::after {
 }
 
 .salary-container-border {
-    border: 5px solid white;
-    padding: 20px;
     border-radius: 13px;
 }
 
@@ -350,6 +347,7 @@ h1::after {
     color: #FF9883;
     margin: 0;
     line-height: 1;
+    text-align: center;
 }
 
 .salary-value {
@@ -357,6 +355,7 @@ h1::after {
     color: #333333;
     margin: 0;
     line-height: 1;
+    text-align: center;
 }
 
 .salary-type-label {
@@ -367,8 +366,6 @@ h1::after {
 }
 
 .salary-message-overall {
-    width: 300px;
-    /* TODO treba li mi ovo */
     display: flex;
 }
 
@@ -402,6 +399,11 @@ h1::after {
     }
 
     /* Filters */
+    .overall-filter-section {
+        margin-top: 50px;
+        /* Adjust this value to make it all look good and not too empty */
+    }
+
     .filters {
         min-width: 500px;
         max-width: 600px;
@@ -413,6 +415,10 @@ h1::after {
 
     .filter-label {
         font-size: 18px;
+    }
+
+    .filter-row label {
+        width: 120px;
     }
 
     .filter-row .input-field {
@@ -437,6 +443,16 @@ h1::after {
     }
 
     /* Data containers */
+    .overall-data-section {
+        margin-top: 250px;
+        /* Adjust this value to ensure content starts below the inital view */
+    }
+
+    .salary-container-border {
+        border: 5px solid white;
+        padding: 20px;
+    }
+
     .data-type-label {
         font-size: 18px;
     }
@@ -451,6 +467,7 @@ h1::after {
     }
 
     .salary-message-overall {
+        max-width: 300px;
         font-size: 18px;
     }
 }
@@ -479,6 +496,10 @@ h1::after {
         font-size: 12px;
     }
 
+    .filter-row label {
+        width: 80px;
+    }
+
     .filter-row .input-field {
         font-size: 12px;
     }
@@ -501,6 +522,11 @@ h1::after {
     }
 
     /* Data containers */
+    .salary-container-border {
+        border: 3px solid white;
+        padding: 10px;
+    }
+
     .data-type-label {
         font-size: 24px;
     }
@@ -515,6 +541,7 @@ h1::after {
     }
 
     .salary-message-overall {
+        max-width: 250px;
         font-size: 12px;
     }
 }
