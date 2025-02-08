@@ -23,11 +23,12 @@ export default defineComponent({
 
         onMounted(() => {
             let localStorageString = localStorage.getItem('userData') ?? ''
+            /* TODO Zakomentirano jer ne radi server.
             if (localStorageString === '') {
                 router.push('/login')
             } else {
                 userData.value = JSON.parse(localStorageString) as UserData
-            }
+            }*/
         })
 
         return { userData, logout }
@@ -110,18 +111,46 @@ export default defineComponent({
             <div class="overall-data-section">
                 <div class="my-salary-container">
                     <p class="data-type-label">My salary</p>
-                    <p class="salary-my">1,234 €</p>
-                    <p class="salary-type-label">net salary</p>
+                    <div class="salary-container-no-border">
+                        <p class="salary-my">1,234 €</p>
+                        <p class="salary-type-label">net salary</p>
+                    </div>
                 </div>
                 <div class="average-salary-container">
-                    <p class="data-type-label">My salary</p>
-                    <p class="salary">1,234 €</p>
-                    <p class="salary-type-label">net salary</p>
+                    <p class="data-type-label">Average</p>
+                    <div class="salary-container-border">
+                        <p class="salary-value">1,538 €</p>
+                        <p class="salary-type-label">net salary</p>
+                    </div>
+                    <div class="salary-message-overall">
+                        <div class="salary-icon-container">
+                            <span id="salary-message-average-icon" class="salary-icon">▽</span>
+                        </div>
+                        <div class="salary-message-container">
+                            <span class="salary-message-part-1">your salary is</span>
+                            <span id="salary-message-average-value" class="salary-message-part-2">304 €</span>
+                            <span id="salary-message-average-lowerhigher" class="salary-message-part-3">lower</span>
+                            <span class="salary-message-part-4">than the average on your position</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="median-salary-container">
-                    <p class="data-type-label">My salary</p>
-                    <p class="salary">1,234 €</p>
-                    <p class="salary-type-label">net salary</p>
+                    <p class="data-type-label">Median</p>
+                    <div class="salary-container-border">
+                        <p class="salary-value">1,465 €</p>
+                        <p class="salary-type-label">net salary</p>
+                    </div>
+                    <div class="salary-message-overall">
+                        <div class="salary-icon-container">
+                            <span id="salary-message-median-icon" class="salary-icon">△</span>
+                        </div>
+                        <div class="salary-message-container">
+                            <span class="salary-message-part-1">your salary is</span>
+                            <span id="salary-message-median-value" class="salary-message-part-2">231 €</span>
+                            <span id="salary-message-median-lowerhigher" class="salary-message-part-3">higher</span>
+                            <span class="salary-message-part-4">than the median on your position</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -274,10 +303,39 @@ h1::after {
 
 /* ----------------- My salary ----------------- */
 .my-salary-container {
+    order: 1;
+    margin-right: 50px;
     display: flex;
     flex-direction: column;
     width: fit-content;
     /* Container width becomes text size */
+}
+
+.average-salary-container {
+    order: 2;
+    margin-right: 50px;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    /* Container width becomes text size */
+}
+
+.median-salary-container {
+    order: 3;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    /* Container width becomes text size */
+}
+
+.salary-container-no-border {
+    padding: 20px;
+}
+
+.salary-container-border {
+    border: 5px solid white;
+    padding: 20px;
+    border-radius: 13px;
 }
 
 .data-type-label {
@@ -294,7 +352,7 @@ h1::after {
     line-height: 1;
 }
 
-.salary {
+.salary-value {
     font-weight: 400;
     color: #333333;
     margin: 0;
@@ -306,6 +364,29 @@ h1::after {
     margin-top: 5px;
     text-align: right;
     /* Aligns right within the container */
+}
+
+.salary-message-overall {
+    width: 300px;
+    /* TODO treba li mi ovo */
+    display: flex;
+}
+
+.salary-icon-container {
+    order: 1;
+}
+
+.salary-message-container {
+    order: 2;
+}
+
+.salary-message-overall span {
+    margin-right: 4px;
+    /* Adds space between elements */
+}
+
+.salary-message-part-2 {
+    font-weight: bold;
 }
 
 /* ----------------- Media queries ----------------- */
@@ -357,15 +438,19 @@ h1::after {
 
     /* Data containers */
     .data-type-label {
-        font-size: 24px;
+        font-size: 18px;
     }
 
-    .salary,
+    .salary-value,
     .salary-my {
         font-size: 72px;
     }
 
     .salary-type-label {
+        font-size: 18px;
+    }
+
+    .salary-message-overall {
         font-size: 18px;
     }
 }
@@ -420,12 +505,16 @@ h1::after {
         font-size: 24px;
     }
 
-    .salary,
+    .salary-value,
     .salary-my {
         font-size: 48px;
     }
 
     .salary-type-label {
+        font-size: 12px;
+    }
+
+    .salary-message-overall {
         font-size: 12px;
     }
 }
