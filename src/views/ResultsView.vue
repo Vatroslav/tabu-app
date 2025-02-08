@@ -23,12 +23,11 @@ export default defineComponent({
 
         onMounted(() => {
             let localStorageString = localStorage.getItem('userData') ?? ''
-            /* TODO Zakomentirano jer ne radi server.
             if (localStorageString === '') {
                 router.push('/login')
             } else {
                 userData.value = JSON.parse(localStorageString) as UserData
-            }*/
+            }
         })
 
         return { userData, logout }
