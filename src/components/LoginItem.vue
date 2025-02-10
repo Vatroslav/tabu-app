@@ -3,6 +3,10 @@
     <img src="/tabu_small_logo_login.webp" alt="Tabu Small Logo" class="small-logo-login" />
     <h1>Login to your Tabu account</h1>
     <GoogleLogin :buttonConfig="buttonConfig" :callback="callback" prompt auto-login />
+    <div v-if="showRegister" class="register">
+      <a href="https://tabuhr.pro.typeform.com/new-user?utm_source=webapp&utm_medium=login">
+        Fill out the questionaire</a> to get started.
+    </div>
   </div>
 </template>
 
@@ -11,12 +15,14 @@ import { decodeCredential, GoogleLogin } from 'vue3-google-login'
 import type { CallbackTypes } from 'vue3-google-login'
 import { loginWithGoogle } from '@/services/auth/google'
 import router from '@/router'
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 
 type GoogleUserData = {
   email: string
   given_name: string
 }
+
+const showRegister = ref(false)
 
 const callback: CallbackTypes.CredentialCallback = async response => {
   // This callback will be triggered when the user selects or login to his Google account from the popup
@@ -25,31 +31,39 @@ const callback: CallbackTypes.CredentialCallback = async response => {
   ) as GoogleUserData
   loginWithGoogle(userData.given_name, userData.email).then(function (resp) {
     if (resp.data.success) {
-      console.log('Successfully logged in', resp.data.response)
-      const localUser = {
-        name: resp.data.response.name,
+      if (!resp.data.response.exists) {
+        console.log('User email does not exist, logging out')
+        localStorage.removeItem('userData')
+        showRegister.value = true
+        router.push({ path: 'login' })
+      } else {
+        console.log('Successfully logged in')
+        showRegister.value = false
+        const localUser = {
+          name: resp.data.response.name,
+        }
+        localStorage.setItem('userData', JSON.stringify(localUser))
+        router.push({ path: 'results' })
       }
-      localStorage.setItem('userData', JSON.stringify(localUser))
-      router.push({ path: 'results' })
     } else {
       console.log('Error', resp.data.error ?? ' logging in!')
     }
   })
 }
 
-const screenWidth = ref(window.innerWidth);
+const screenWidth = ref(window.innerWidth)
 
 const buttonConfig = computed(() => {
-  let width = "500px"; // Default width for desktops
-  if (screenWidth.value < 768) width = "250px"; // Mobile
+  let width = '500px' // Default width for desktops
+  if (screenWidth.value < 768) width = '250px' // Mobile
 
   return {
-    text: "continue_with", // "signin_with", "signup_with", "continue_with"
-    size: "large",
+    text: 'continue_with', // "signin_with", "signup_with", "continue_with"
+    size: 'large',
     width, // Dynamic width update
-    shape: "pill",
-  };
-});
+    shape: 'pill',
+  }
+})
 </script>
 
 <style scoped>
@@ -61,6 +75,10 @@ const buttonConfig = computed(() => {
   height: 80vh;
 }
 
+.register {
+  margin-top: 20px;
+  text-align: center;
+}
 
 @media (max-width: 768px) {
   .small-logo-login {
@@ -69,7 +87,6 @@ const buttonConfig = computed(() => {
     text-align: center;
   }
 }
-
 
 @media (min-width: 768px) {
   .small-logo-login {
