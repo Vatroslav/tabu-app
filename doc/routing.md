@@ -31,6 +31,11 @@ const router = createRouter({
       name: 'results',
       component: () => import('@/views/ResultsView.vue'),
     },
+    {
+      path: '/submission',
+      name: 'submission',
+      component: () => import('@/views/SubmissionView.vue'),
+    },
   ],
 })
 
@@ -43,3 +48,4 @@ export default router
 - **Login**: `/login` - Displays the login view.
 - **About**: `/about` - Displays the about view (lazy-loaded).
 - **Results**: `/results` - Displays the results view (lazy-loaded).
+- **Submission**: `/submission` - Displays the submission view (lazy-loaded).
