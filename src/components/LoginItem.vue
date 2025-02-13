@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { decodeCredential, GoogleLogin } from 'vue3-google-login'
 import type { CallbackTypes } from 'vue3-google-login'
-import { loginWithGoogle } from '@/services/auth/google'
+import { checkEmail } from '@/services/auth/google'
 import router from '@/router'
 import { ref, computed } from 'vue'
 

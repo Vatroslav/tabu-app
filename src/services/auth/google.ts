@@ -1,7 +1,7 @@
 // the axios instance and types
 import http from '../api'
 
-async function loginWithGoogle(name: string, email: string) {
+async function checkEmail(name: string, email: string) {
   return await http({
     url: 'api/user/check',
     method: 'POST',
@@ -18,4 +18,4 @@ async function loginWithGoogle(name: string, email: string) {
   })
 }
 
-export { loginWithGoogle }
+export { checkEmail }
