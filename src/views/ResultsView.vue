@@ -85,16 +85,13 @@ export default defineComponent({
                     <div class="filter-row">
                         <label for="contract" class="filter-label">Contract:</label>
                         <select id="contract" class="input-field">
-                            <option value="Permanent employment contract" selected>Permanent employment contract
-                            </option>
+                            <option value="Permanent employment contract" selected>Permanent employment contract</option>
                             <option value="Fixed-term employment contract">Fixed-term employment contract</option>
                             <option value="Student contract">Student contract</option>
                             <option value="Sole proprietorship (obrt)">Sole proprietorship (obrt)</option>
                             <option value="I have my own company">I have my own company</option>
                             <option value="Contract for work">Contract for work</option>
-                            <option value="Gaining initial work experience/internship">Gaining initial work
-                                experience/internship
-                            </option>
+                            <option value="Gaining initial work experience/internship">Gaining initial work experience/internship</option>
                             <option value="Copyright contract">Copyright contract</option>
                         </select>
                     </div>
@@ -152,14 +149,7 @@ export default defineComponent({
                     </div>
                 </div>
             </div>
-
-            <!--
-        <div id="user_details" v-if="userDetails">
-          <h2>User Details</h2>
-          <p>Name: {{ userDetails.name }}</p>
-          <p>Email: {{ userDetails.email }}</p>
-        </div>
-        -->
+            <router-link to="/submission">Check Submission</router-link>
         </div>
     </div>
 </template>
@@ -236,7 +226,7 @@ h1::after {
 }
 
 .input-field.disabled {
-    background-color: #f5F7EE;
+    background-color: #F5F7EE;
     color: #969694;
     box-shadow: inset 0 0 0 1px #969694;
     border-radius: 3px;
@@ -444,7 +434,7 @@ h1::after {
     /* Data containers */
     .overall-data-section {
         margin-top: 250px;
-        /* Adjust this value to ensure content starts below the inital view */
+        /* Adjust this value to ensure content starts below the initial view */
     }
 
     .salary-container-border {

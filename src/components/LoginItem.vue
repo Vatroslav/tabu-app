@@ -5,7 +5,7 @@
     <GoogleLogin :buttonConfig="buttonConfig" :callback="callback" prompt auto-login />
     <div v-if="showRegister" class="register">
       <a href="https://tabuhr.pro.typeform.com/new-user?utm_source=webapp&utm_medium=login">
-        Fill out the questionaire</a> to get started.
+        Fill out the questionnaire</a> to get started.
     </div>
   </div>
 </template>
@@ -25,11 +25,11 @@ type GoogleUserData = {
 const showRegister = ref(false)
 
 const callback: CallbackTypes.CredentialCallback = async response => {
-  // This callback will be triggered when the user selects or login to his Google account from the popup
+  // This callback will be triggered when the user selects or logs in to their Google account from the popup
   const userData: GoogleUserData = decodeCredential(
     response.credential,
   ) as GoogleUserData
-  loginWithGoogle(userData.given_name, userData.email).then(function (resp) {
+  checkEmail(userData.given_name, userData.email).then((resp: { data: { success: boolean, response: { exists: boolean, name: string, id: string }, error: string } }) => {
     if (resp.data.success) {
       if (!resp.data.response.exists) {
         console.log('User email does not exist, logging out')
@@ -41,6 +41,7 @@ const callback: CallbackTypes.CredentialCallback = async response => {
         showRegister.value = false
         const localUser = {
           name: resp.data.response.name,
+          id: resp.data.response.id, // Add the id field
         }
         localStorage.setItem('userData', JSON.stringify(localUser))
         router.push({ path: 'results' })
