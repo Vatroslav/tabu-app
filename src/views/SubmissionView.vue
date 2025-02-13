@@ -28,7 +28,7 @@ export default defineComponent({
         if (id) {
           try {
             const data = await submissionCheck(id)
-            submission.value = data.response
+            submission.value = data.data.response
           } catch (err: unknown) {
             if (err instanceof Error) {
               error.value = err.message

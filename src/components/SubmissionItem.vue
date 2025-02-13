@@ -1,8 +1,8 @@
 <template>
   <div class="submission-item">
     <h2>Submission Details</h2>
-    <p><strong>Unique ID:</strong> {{ submission.unique_id }}</p>
-    <p><strong>Status:</strong> {{ submission.status }}</p>
+
+
     <p><strong>Message:</strong> {{ submission.message }}</p>
     <p><strong>Contract Type:</strong> {{ submission.contract_type }}</p>
     <p><strong>Country Salary:</strong> {{ submission.country_salary }}</p>
