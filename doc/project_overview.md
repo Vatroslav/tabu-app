@@ -8,7 +8,6 @@ The frontend repo is a Vue 3 application using Vite for build and development. T
 - **Vue Router**: Routing.
 - **Axios**: HTTP requests.
 - **vue3-google-login**: Google authentication.
-- **Submission View**: Displays the submission details.
 
 ## Scripts
 
@@ -38,7 +37,7 @@ The frontend repo is a Vue 3 application using Vite for build and development. T
 
 - **Public Assets**: Static assets including a favicon and various logo images.
 - **Components**: Key components include `HomeItem.vue`, `LoginItem.vue`, `NavbarItem.vue`, and icon components.
-- **Views**: Main views include `AboutView.vue`, `HomeView.vue`, `LoginView.vue`, `ResultsView.vue`, and `SubmissionView.vue`.
+- **Views**: Main views include `LoginView.vue` and `ResultsView.vue`.
 - **Services**: API service functions in `api.ts` and TypeScript types in `types.ts`. Authentication-related services in the `auth` directory.
 
 ## Configuration Files
