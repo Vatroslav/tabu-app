@@ -26,11 +26,21 @@ export default defineComponent({
             country_salary: '',
         });
 
+        const selectedSeniorities = ref<string[]>([]); // Starting selected seniority set to empty and will be filled from submission data.
 
         const logout = () => {
             localStorage.removeItem('userData')
             router.push('/login')
         }
+
+        const toggleSeniority = (seniority: string) => {
+            const index = selectedSeniorities.value.indexOf(seniority);
+            if (index === -1) {
+                selectedSeniorities.value.push(seniority);
+            } else {
+                selectedSeniorities.value.splice(index, 1);
+            }
+        };
 
         onMounted(async () => {
             let localStorageString = localStorage.getItem('userData') ?? '' // Get user data from local storage
@@ -44,6 +54,10 @@ export default defineComponent({
                     if (response.data.success && response.data.response.exists) {
                         submissionData.value = response.data.response;
                         console.log('Submission Data:', submissionData.value);
+
+                        if (submissionData.value.seniority !== 'N/A') {
+                            selectedSeniorities.value = [submissionData.value.seniority];
+                        }
                     } else {
                         console.log('No submission data found');
                     }
@@ -53,7 +67,7 @@ export default defineComponent({
             }
         })
 
-        return { userData, submissionData, logout }
+        return { userData, submissionData, selectedSeniorities, toggleSeniority, logout }
     }
 })
 </script>
@@ -77,25 +91,25 @@ export default defineComponent({
                             <option value="my_position" selected>{{ submissionData.position }}</option>
                             <option value="other_positions_in_department">Other positions in {{
                                 submissionData.position_group }}</option>
-                            <option value="additional_position">Additional position: Backend</option>
+                            <option value="additional_position">Additional position: UNKNOWN</option>
                         </select>
                     </div>
 
                     <div class="filter-row seniority-row">
                         <label class="filter-label">Seniority:</label>
                         <div class="seniority-group">
-                            <button class="seniority-btn" :class="{ active: submissionData.seniority === 'Junior' }"
-                                :disabled="submissionData.seniority === 'N/A'">
+                            <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Junior') }"
+                                :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Junior')">
                                 Junior
                             </button>
 
-                            <button class="seniority-btn" :class="{ active: submissionData.seniority === 'Middle' }"
-                                :disabled="submissionData.seniority === 'N/A'">
+                            <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Middle') }"
+                                :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Middle')">
                                 Middle
                             </button>
 
-                            <button class="seniority-btn" :class="{ active: submissionData.seniority === 'Senior' }"
-                                :disabled="submissionData.seniority === 'N/A'">
+                            <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Senior') }"
+                                :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Senior')">
                                 Senior
                             </button>
                         </div>
@@ -276,6 +290,7 @@ h1::after {
     color: #969694;
     box-shadow: inset 0 0 0 1px #969694;
     border-radius: 3px;
+    cursor: not-allowed;
 }
 
 .seniority-row {
@@ -312,6 +327,8 @@ h1::after {
     background-color: #f5F7EE;
     cursor: not-allowed;
     box-shadow: inset 0 0 0 1px #969694;
+    color: #969694;
+    border-radius: 3px;
 }
 
 
