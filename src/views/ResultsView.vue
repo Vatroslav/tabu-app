@@ -3,9 +3,11 @@ import { defineComponent } from 'vue'
 import { ref, onMounted } from 'vue'
 import router from '@/router'
 import NavbarItem from '@/components/NavbarItem.vue'
+import { submissionCheck } from '@/services/submission';
 
 type UserData = {
-    name: string
+    name: string,
+    unique_id: string
 }
 
 export default defineComponent({
@@ -14,23 +16,44 @@ export default defineComponent({
         NavbarItem
     },
     setup() {
-        const userData = ref<UserData>({ name: '' })
+        const userData = ref<UserData>({ name: '', unique_id: '' })
+        const submissionData = ref({
+            position_group: '',
+            position: '',
+            seniority: '',
+            tech: '',
+            contract_type: '',
+            country_salary: '',
+        });
+
 
         const logout = () => {
             localStorage.removeItem('userData')
             router.push('/login')
         }
 
-        onMounted(() => {
-            let localStorageString = localStorage.getItem('userData') ?? ''
+        onMounted(async () => {
+            let localStorageString = localStorage.getItem('userData') ?? '' // Get user data from local storage
             if (localStorageString === '') {
                 router.push('/login')
             } else {
                 userData.value = JSON.parse(localStorageString) as UserData
+                console.log('User Data:', userData)
+                try {
+                    const response = await submissionCheck(userData.value.unique_id);
+                    if (response.data.success && response.data.response.exists) {
+                        submissionData.value = response.data.response;
+                        console.log('Submission Data:', submissionData.value);
+                    } else {
+                        console.log('No submission data found');
+                    }
+                } catch (error) {
+                    console.error('Error fetching submission data:', error);
+                }
             }
         })
 
-        return { userData, logout }
+        return { userData, submissionData, logout }
     }
 })
 </script>
@@ -40,7 +63,8 @@ export default defineComponent({
         <NavbarItem />
         <div class="results">
             <h1>My salary comparison</h1>
-            <p style="color: red;">Logged in as {{ userData.name }}.</p>
+            <p style="color: red;">Hello {{ userData.name }}! Your unique_id is {{ userData.unique_id }}.
+            </p>
             <button @click="logout">Logout</button>
             <!----------------- Filters ----------------->
             <div class="overall-filter-section">
@@ -49,9 +73,10 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="position" class="filter-label">Position:</label>
-                        <select id="position" value="Sales Assistant" class="input-field">
-                            <option value="my_position">Sales Assistant</option>
-                            <option value="other_positions_in_department">Other positions in the department</option>
+                        <select id="position" class="input-field">
+                            <option value="my_position" selected>{{ submissionData.position }}</option>
+                            <option value="other_positions_in_department">Other positions in {{
+                                submissionData.position_group }}</option>
                             <option value="additional_position">Additional position: Backend</option>
                         </select>
                     </div>
@@ -59,9 +84,20 @@ export default defineComponent({
                     <div class="filter-row seniority-row">
                         <label class="filter-label">Seniority:</label>
                         <div class="seniority-group">
-                            <button class="seniority-btn">Junior</button>
-                            <button class="seniority-btn active">Middle</button>
-                            <button class="seniority-btn">Senior</button>
+                            <button class="seniority-btn" :class="{ active: submissionData.seniority === 'Junior' }"
+                                :disabled="submissionData.seniority === 'N/A'">
+                                Junior
+                            </button>
+
+                            <button class="seniority-btn" :class="{ active: submissionData.seniority === 'Middle' }"
+                                :disabled="submissionData.seniority === 'N/A'">
+                                Middle
+                            </button>
+
+                            <button class="seniority-btn" :class="{ active: submissionData.seniority === 'Senior' }"
+                                :disabled="submissionData.seniority === 'N/A'">
+                                Senior
+                            </button>
                         </div>
                     </div>
 
@@ -85,13 +121,16 @@ export default defineComponent({
                     <div class="filter-row">
                         <label for="contract" class="filter-label">Contract:</label>
                         <select id="contract" class="input-field">
-                            <option value="Permanent employment contract" selected>Permanent employment contract</option>
+                            <option value="Permanent employment contract" selected>Permanent employment contract
+                            </option>
                             <option value="Fixed-term employment contract">Fixed-term employment contract</option>
                             <option value="Student contract">Student contract</option>
                             <option value="Sole proprietorship (obrt)">Sole proprietorship (obrt)</option>
                             <option value="I have my own company">I have my own company</option>
                             <option value="Contract for work">Contract for work</option>
-                            <option value="Gaining initial work experience/internship">Gaining initial work experience/internship</option>
+                            <option value="Gaining initial work experience/internship">Gaining initial work
+                                experience/internship
+                            </option>
                             <option value="Copyright contract">Copyright contract</option>
                         </select>
                     </div>
@@ -149,7 +188,14 @@ export default defineComponent({
                     </div>
                 </div>
             </div>
-            <router-link to="/submission">Check Submission</router-link>
+
+            <!--
+        <div id="user_details" v-if="userDetails">
+          <h2>User Details</h2>
+          <p>Name: {{ userDetails.name }}</p>
+          <p>Email: {{ userDetails.email }}</p>
+        </div>
+        -->
         </div>
     </div>
 </template>
@@ -226,7 +272,7 @@ h1::after {
 }
 
 .input-field.disabled {
-    background-color: #F5F7EE;
+    background-color: #f5F7EE;
     color: #969694;
     box-shadow: inset 0 0 0 1px #969694;
     border-radius: 3px;
@@ -252,12 +298,22 @@ h1::after {
     cursor: pointer;
 }
 
+.seniority-btn:nth-child(2) {
+    margin: 0 10px;
+}
+
 .seniority-btn.active {
-    background-color: white;
     color: black;
     border: none;
     box-shadow: inset 0 0 0 2px black;
 }
+
+.seniority-btn:disabled {
+    background-color: #f5F7EE;
+    cursor: not-allowed;
+    box-shadow: inset 0 0 0 1px #969694;
+}
+
 
 /* ----------------- Amount of salaries ----------------- */
 
@@ -434,7 +490,7 @@ h1::after {
     /* Data containers */
     .overall-data-section {
         margin-top: 250px;
-        /* Adjust this value to ensure content starts below the initial view */
+        /* Adjust this value to ensure content starts below the inital view */
     }
 
     .salary-container-border {
