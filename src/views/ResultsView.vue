@@ -28,6 +28,8 @@ export default defineComponent({
 
         const selectedSeniorities = ref<string[]>([]);
         const selectedTech = ref<string>('no_technology');
+        const countrySalary = ref<string>('');
+        const contractType = ref<string>('');
         // Starting values are set to empty and will be filled from submission data.
 
         const techOptions = ref<string[]>([]);
@@ -60,6 +62,9 @@ export default defineComponent({
                         submissionData.value = response.data.response;
                         //console.log('Submission Data:', submissionData.value);
 
+                        countrySalary.value = submissionData.value.country_salary;
+                        contractType.value = submissionData.value.contract_type;
+
                         if (submissionData.value.seniority !== 'N/A') {
                             selectedSeniorities.value = [submissionData.value.seniority];
                         }
@@ -76,7 +81,7 @@ export default defineComponent({
             }
         })
 
-        return { userData, submissionData, selectedSeniorities, toggleSeniority, selectedTech, techOptions, logout }
+        return { userData, submissionData, selectedSeniorities, toggleSeniority, selectedTech, techOptions, countrySalary, contractType, logout }
     }
 })
 </script>
@@ -133,29 +138,26 @@ export default defineComponent({
                         </select>
                     </div>
 
-
                     <div class="filter-row">
                         <label for="country" class="filter-label">Country:</label>
-                        <select id="country" class="input-field">
+                        <select id="country" class="input-field" v-model="countrySalary">
                             <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
-                            <option value="Croatia" selected>Croatia</option>
+                            <option value="Croatia">Croatia</option>
                             <option value="Serbia">Serbia</option>
                         </select>
                     </div>
 
                     <div class="filter-row">
                         <label for="contract" class="filter-label">Contract:</label>
-                        <select id="contract" class="input-field">
-                            <option value="Permanent employment contract" selected>Permanent employment contract
-                            </option>
+                        <select id="contract" class="input-field" v-model="contractType">
+                            <option value="Permanent employment contract">Permanent employment contract</option>
                             <option value="Fixed-term employment contract">Fixed-term employment contract</option>
                             <option value="Student contract">Student contract</option>
                             <option value="Sole proprietorship (obrt)">Sole proprietorship (obrt)</option>
                             <option value="I have my own company">I have my own company</option>
                             <option value="Contract for work">Contract for work</option>
                             <option value="Gaining initial work experience/internship">Gaining initial work
-                                experience/internship
-                            </option>
+                                experience/internship</option>
                             <option value="Copyright contract">Copyright contract</option>
                         </select>
                     </div>
