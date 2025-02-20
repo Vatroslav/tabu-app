@@ -4,8 +4,13 @@
     <h1>Login to your Tabu account</h1>
     <GoogleLogin :buttonConfig="buttonConfig" :callback="callback" prompt auto-login />
     <div v-if="showRegister" class="register">
+      You are not registered yet. <br><br>
+      Please,
       <a href="https://tabuhr.pro.typeform.com/new-user?utm_source=webapp&utm_medium=login">
-        Fill out the questionnaire</a> to get started.
+        fill out the questionnaire</a> to get started.
+      <br><br>
+      If you have already filled out the questionnaire, <br>please wait approximately <b>5 minutes</b> for your account
+      to be created.
     </div>
   </div>
 </template>
@@ -29,7 +34,8 @@ const callback: CallbackTypes.CredentialCallback = async response => {
   const userData: GoogleUserData = decodeCredential(
     response.credential,
   ) as GoogleUserData
-  checkEmail(userData.given_name, userData.email).then((resp: { data: { success: boolean, response: { exists: boolean, name: string, id: string }, error: string } }) => {
+  checkEmail(userData.given_name, userData.email).then(function (resp) {
+    // Sends API request to get the response "resp", then uses that response to get the required data.
     if (resp.data.success) {
       if (!resp.data.response.exists) {
         console.log('User email does not exist, logging out')
@@ -41,9 +47,9 @@ const callback: CallbackTypes.CredentialCallback = async response => {
         showRegister.value = false
         const localUser = {
           name: resp.data.response.name,
-          id: resp.data.response.id, // Add the id field
+          unique_id: resp.data.response.id,
         }
-        localStorage.setItem('userData', JSON.stringify(localUser))
+        localStorage.setItem('userData', JSON.stringify(localUser)) // Save user data to local storage
         router.push({ path: 'results' })
       }
     } else {
