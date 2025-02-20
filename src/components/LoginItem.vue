@@ -11,6 +11,8 @@
       <br><br>
       If you have already filled out the questionnaire, <br>please wait approximately <b>5 minutes</b> for your account
       to be created.
+      <br><br>
+      If it still doesn't work, please contact us at info@tabu.hr
     </div>
   </div>
 </template>
