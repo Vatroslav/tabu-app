@@ -26,7 +26,12 @@ export default defineComponent({
             country_salary: '',
         });
 
-        const selectedSeniorities = ref<string[]>([]); // Starting selected seniority set to empty and will be filled from submission data.
+        const selectedSeniorities = ref<string[]>([]);
+        const selectedTech = ref<string>('no_technology');
+        // Starting values are set to empty and will be filled from submission data.
+
+        const techOptions = ref<string[]>([]);
+        // List of available technologies
 
         const logout = () => {
             localStorage.removeItem('userData')
@@ -48,15 +53,19 @@ export default defineComponent({
                 router.push('/login')
             } else {
                 userData.value = JSON.parse(localStorageString) as UserData
-                console.log('User Data:', userData)
+                //console.log('User Data:', userData)
                 try {
                     const response = await submissionCheck(userData.value.unique_id);
                     if (response.data.success && response.data.response.exists) {
                         submissionData.value = response.data.response;
-                        console.log('Submission Data:', submissionData.value);
+                        //console.log('Submission Data:', submissionData.value);
 
                         if (submissionData.value.seniority !== 'N/A') {
                             selectedSeniorities.value = [submissionData.value.seniority];
+                        }
+                        if (submissionData.value.tech && submissionData.value.tech.length > 0) {
+                            techOptions.value = submissionData.value.tech.split(','); // Split tech string into array by comma
+                            selectedTech.value = techOptions.value[0]; // First tech selected as default
                         }
                     } else {
                         console.log('No submission data found');
@@ -67,7 +76,7 @@ export default defineComponent({
             }
         })
 
-        return { userData, submissionData, selectedSeniorities, toggleSeniority, logout }
+        return { userData, submissionData, selectedSeniorities, toggleSeniority, selectedTech, techOptions, logout }
     }
 })
 </script>
@@ -117,11 +126,13 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="technology" class="filter-label">Technology:</label>
-                        <select type="text" id="technology" value="No technology" class="input-field disabled" disabled>
-                            <option value="no_technology">No technology</option>
-                            <option value="technology">Technology</option>
+                        <select id="technology" v-model="selectedTech" class="input-field"
+                            :class="{ disabled: techOptions.length === 0 }" :disabled="techOptions.length === 0">
+                            <option v-if="techOptions.length === 0" value="no_technology">No technology</option>
+                            <option v-for="tech in techOptions" :key="tech" :value="tech">{{ tech }}</option>
                         </select>
                     </div>
+
 
                     <div class="filter-row">
                         <label for="country" class="filter-label">Country:</label>
