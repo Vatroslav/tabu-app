@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import router from '@/router'
 import NavbarItem from '@/components/NavbarItem.vue'
 import { submissionCheck } from '@/services/submission';
+import { additionalPositionCheck } from '@/services/additional_position';
 
 type UserData = {
     name: string,
@@ -16,7 +17,7 @@ export default defineComponent({
         NavbarItem
     },
     setup() {
-        const userData = ref<UserData>({ name: '', unique_id: '' })
+        const userData = ref<UserData>({ name: '', unique_id: '' });
         const submissionData = ref({
             position_group: '',
             position: '',
@@ -25,11 +26,13 @@ export default defineComponent({
             contract_type: '',
             country_salary: '',
         });
+        const additionalPositionData = ref({
+            additional_position_group: '',
+            additional_position: '',
+        });
 
         const selectedSeniorities = ref<string[]>([]);
         const selectedTech = ref<string>('no_technology');
-        const countrySalary = ref<string>('');
-        const contractType = ref<string>('');
         // Starting values are set to empty and will be filled from submission data.
 
         const techOptions = ref<string[]>([]);
@@ -57,20 +60,24 @@ export default defineComponent({
                 userData.value = JSON.parse(localStorageString) as UserData
                 //console.log('User Data:', userData)
                 try {
-                    const response = await submissionCheck(userData.value.unique_id);
-                    if (response.data.success && response.data.response.exists) {
-                        submissionData.value = response.data.response;
+                    const submissionResponse = await submissionCheck(userData.value.unique_id);
+                    if (submissionResponse.data.success && submissionResponse.data.response.exists) {
+                        submissionData.value = submissionResponse.data.response;
                         //console.log('Submission Data:', submissionData.value);
-
-                        countrySalary.value = submissionData.value.country_salary;
-                        contractType.value = submissionData.value.contract_type;
-
                         if (submissionData.value.seniority !== 'N/A') {
                             selectedSeniorities.value = [submissionData.value.seniority];
                         }
                         if (submissionData.value.tech && submissionData.value.tech.length > 0) {
                             techOptions.value = submissionData.value.tech.split(','); // Split tech string into array by comma
                             selectedTech.value = techOptions.value[0]; // First tech selected as default
+                        }
+
+                        // Only check for other data if the submission exists.
+                        const additionalPositionResponse = await additionalPositionCheck(userData.value.unique_id);
+
+                        if (additionalPositionResponse.data.success && additionalPositionResponse.data.response.exists) {
+                            additionalPositionData.value = additionalPositionResponse.data.response;
+                            console.log('Additional Position Data:', additionalPositionData.value);
                         }
                     } else {
                         console.log('No submission data found');
@@ -81,7 +88,7 @@ export default defineComponent({
             }
         })
 
-        return { userData, submissionData, selectedSeniorities, toggleSeniority, selectedTech, techOptions, countrySalary, contractType, logout }
+        return { userData, submissionData, selectedSeniorities, toggleSeniority, selectedTech, techOptions, additionalPositionData, logout }
     }
 })
 </script>
@@ -105,7 +112,9 @@ export default defineComponent({
                             <option value="my_position" selected>{{ submissionData.position }}</option>
                             <option value="other_positions_in_department">Other positions in {{
                                 submissionData.position_group }}</option>
-                            <option value="additional_position">Additional position: UNKNOWN</option>
+                            <option v-if="additionalPositionData.additional_position" value="additional_position">
+                                Additional position: {{ additionalPositionData.additional_position }}
+                            </option>
                         </select>
                     </div>
 
@@ -140,7 +149,7 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="country" class="filter-label">Country:</label>
-                        <select id="country" class="input-field" v-model="countrySalary">
+                        <select id="country" class="input-field" v-model="submissionData.country_salary">
                             <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
                             <option value="Croatia">Croatia</option>
                             <option value="Serbia">Serbia</option>
@@ -149,7 +158,7 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="contract" class="filter-label">Contract:</label>
-                        <select id="contract" class="input-field" v-model="contractType">
+                        <select id="contract" class="input-field" v-model="submissionData.contract_type">
                             <option value="Permanent employment contract">Permanent employment contract</option>
                             <option value="Fixed-term employment contract">Fixed-term employment contract</option>
                             <option value="Student contract">Student contract</option>
