@@ -1,10 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ref, onMounted } from 'vue'
+import { computed } from 'vue'
 import router from '@/router'
 import NavbarItem from '@/components/NavbarItem.vue'
 import { submissionCheck } from '@/services/submission';
 import { additionalPositionCheck } from '@/services/additional_position';
+import { salaryCheck } from '@/services/salary';
 
 type UserData = {
     name: string,
@@ -30,13 +32,17 @@ export default defineComponent({
             additional_position_group: '',
             additional_position: '',
         });
-
+        const salaryData = ref({
+            salary_net: 0,
+            salary_gross: 0,
+        });
         const selectedSeniorities = ref<string[]>([]);
-        const selectedTech = ref<string>('no_technology');
-        // Starting values are set to empty and will be filled from submission data.
+        const selectedTech = ref<string>('no_technology'); // Starting values are set to empty and will be filled from submission data.
+        const techOptions = ref<string[]>([]); // List of available technologies
 
-        const techOptions = ref<string[]>([]);
-        // List of available technologies
+        const locale = ref('en-US');
+        const currencyStyle = ref<'currency' | 'decimal' | 'percent'>('currency'); // Can't be a simple string because of the type check.
+        const currencyType = ref('EUR');
 
         const logout = () => {
             localStorage.removeItem('userData')
@@ -51,6 +57,28 @@ export default defineComponent({
                 selectedSeniorities.value.splice(index, 1);
             }
         };
+
+        const formattedSalary_net = computed(() => {
+            if (!salaryData.value.salary_net) return "N/A";
+            return salaryData.value.salary_net.toLocaleString(
+                locale.value,
+                {
+                    style: currencyStyle.value,
+                    currency: currencyType.value,
+                    minimumFractionDigits: 0
+                });
+        });
+
+        const formattedSalary_gross = computed(() => {
+            if (!salaryData.value.salary_gross) return "N/A";
+            return salaryData.value.salary_gross.toLocaleString(
+                locale.value,
+                {
+                    style: currencyStyle.value,
+                    currency: currencyType.value,
+                    minimumFractionDigits: 0
+                });
+        });
 
         onMounted(async () => {
             let localStorageString = localStorage.getItem('userData') ?? '' // Get user data from local storage
@@ -74,10 +102,15 @@ export default defineComponent({
 
                         // Only check for other data if the submission exists.
                         const additionalPositionResponse = await additionalPositionCheck(userData.value.unique_id);
-
                         if (additionalPositionResponse.data.success && additionalPositionResponse.data.response.exists) {
                             additionalPositionData.value = additionalPositionResponse.data.response;
-                            console.log('Additional Position Data:', additionalPositionData.value);
+                            //console.log('Additional Position Data:', additionalPositionData.value);
+                        }
+
+                        const salaryResponse = await salaryCheck(userData.value.unique_id);
+                        if (salaryResponse.data.success && salaryResponse.data.response.exists) {
+                            salaryData.value = salaryResponse.data.response;
+                            //console.log('Salary:', salaryData.value);
                         }
                     } else {
                         console.log('No submission data found');
@@ -88,7 +121,7 @@ export default defineComponent({
             }
         })
 
-        return { userData, submissionData, selectedSeniorities, toggleSeniority, selectedTech, techOptions, additionalPositionData, logout }
+        return { userData, submissionData, selectedSeniorities, toggleSeniority, selectedTech, techOptions, additionalPositionData, salaryData, formattedSalary_net, logout }
     }
 })
 </script>
@@ -183,7 +216,7 @@ export default defineComponent({
                 <div class="my-salary-container">
                     <p class="data-type-label">My salary</p>
                     <div class="salary-container-no-border">
-                        <p class="salary-my">1,234 €</p>
+                        <p class="salary-my">{{ formattedSalary_net }}</p>
                         <p class="salary-type-label">net salary</p>
                     </div>
                 </div>
