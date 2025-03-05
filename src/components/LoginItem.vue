@@ -45,7 +45,7 @@ const callback: CallbackTypes.CredentialCallback = async response => {
         showRegister.value = true
         router.push({ path: 'login' })
       } else {
-        console.log('Successfully logged in')
+        //console.log('Successfully logged in')
         showRegister.value = false
         const localUser = {
           name: resp.data.response.name,
@@ -55,7 +55,7 @@ const callback: CallbackTypes.CredentialCallback = async response => {
         router.push({ path: 'results' })
       }
     } else {
-      console.log('Error', resp.data.error ?? ' logging in!')
+      console.error('Error', resp.data.error ?? ' logging in!')
     }
   })
 }
@@ -76,6 +76,10 @@ const buttonConfig = computed(() => {
 </script>
 
 <style scoped>
+h1 {
+  font-weight: 500;
+}
+
 .login {
   display: flex;
   flex-direction: column;
@@ -87,6 +91,7 @@ const buttonConfig = computed(() => {
 .register {
   margin-top: 20px;
   text-align: center;
+  font-weight: 300;
 }
 
 @media (max-width: 768px) {

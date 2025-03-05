@@ -7,6 +7,11 @@ import NavbarItem from '@/components/NavbarItem.vue'
 import { submissionCheck } from '@/services/submission';
 import { additionalPositionCheck } from '@/services/additional_position';
 import { salaryCheck } from '@/services/salary';
+import { listTechCheck } from '@/services/list_tech';
+import { listCountrySalaryCheck } from '@/services/list_country_salary';
+import { listContractTypeCheck } from '@/services/list_contract_type';
+import { dataAmountCheck } from '@/services/data_amount';
+import axios from 'axios';
 
 type UserData = {
     name: string,
@@ -38,7 +43,7 @@ export default defineComponent({
         });
         const selectedSeniorities = ref<string[]>([]);
         const selectedTech = ref<string>('no_technology'); // Starting values are set to empty and will be filled from submission data.
-        const techOptions = ref<string[]>([]); // List of available technologies
+        const techOptions = ref<{ tech: string; amount: number }[]>([]); // List of available technologies with amounts
 
         const locale = ref('en-US');
         const currencyStyle = ref<'currency' | 'decimal' | 'percent'>('currency'); // Can't be a simple string because of the type check.
@@ -95,10 +100,12 @@ export default defineComponent({
                         if (submissionData.value.seniority !== 'N/A') {
                             selectedSeniorities.value = [submissionData.value.seniority];
                         }
+
+                        /*
                         if (submissionData.value.tech && submissionData.value.tech.length > 0) {
                             techOptions.value = submissionData.value.tech.split(','); // Split tech string into array by comma
                             selectedTech.value = techOptions.value[0]; // First tech selected as default
-                        }
+                        }*/
 
                         // Only check for other data if the submission exists.
                         const additionalPositionResponse = await additionalPositionCheck(userData.value.unique_id);
@@ -112,11 +119,24 @@ export default defineComponent({
                             salaryData.value = salaryResponse.data.response;
                             //console.log('Salary:', salaryData.value);
                         }
+
+                        /*const listTechResponse = await listTechCheck(userData.value.unique_id);
+                        if (listTechResponse.data.success && listTechResponse.data.response.exists) {
+                            techOptions.value = listTechResponse.data.response;
+                            console.log('Tech:', techOptions.value);
+                        }*/
                     } else {
                         console.log('No submission data found');
                     }
                 } catch (error) {
-                    console.error('Error fetching submission data:', error);
+                    if (axios.isAxiosError(error)) {
+                        console.error('Axios error:', error.response?.data.message ?? error.message)
+                        //console.error('Axios error - data:', error.response?.data);
+                        //console.error('Axios error - status:', error.response?.status);
+                        //console.error('Axios error - headers:', error.response?.headers);
+                    } else {
+                        console.error('Error fetching submission data:', error)
+                    }
                 }
             }
         })
@@ -176,7 +196,8 @@ export default defineComponent({
                         <select id="technology" v-model="selectedTech" class="input-field"
                             :class="{ disabled: techOptions.length === 0 }" :disabled="techOptions.length === 0">
                             <option v-if="techOptions.length === 0" value="no_technology">No technology</option>
-                            <option v-for="tech in techOptions" :key="tech" :value="tech">{{ tech }}</option>
+                            <option v-for="tech in techOptions" :key="tech.tech" :value="tech.tech">{{ tech.tech }} ({{
+                                tech.amount }})</option>
                         </select>
                     </div>
 
@@ -228,7 +249,8 @@ export default defineComponent({
                     </div>
                     <div class="salary-message-overall">
                         <div class="salary-icon-container">
-                            <span id="salary-message-average-icon" class="salary-icon">▽</span>
+                            <img id="salary-message-average-icon" class="salary-icon"
+                                src="@/assets/polygon_donwturned_red.webp" alt="Downward Polygon" />
                         </div>
                         <div class="salary-message-container">
                             <span class="salary-message-part-1">your salary is</span>
@@ -246,7 +268,8 @@ export default defineComponent({
                     </div>
                     <div class="salary-message-overall">
                         <div class="salary-icon-container">
-                            <span id="salary-message-median-icon" class="salary-icon">△</span>
+                            <img id="salary-message-average-icon" class="salary-icon"
+                                src="@/assets/polygon_upturned_green.webp" alt="Upward Polygon" />
                         </div>
                         <div class="salary-message-container">
                             <span class="salary-message-part-1">your salary is</span>
@@ -279,7 +302,7 @@ export default defineComponent({
 }
 
 h1 {
-    font-weight: bold;
+    font-weight: 600;
     color: #333;
     position: relative;
     display: inline-block;
@@ -313,6 +336,7 @@ h1::after {
     display: flex;
     align-items: center;
     margin-top: 10px;
+    font-weight: 500;
 }
 
 .filter-row label {
@@ -329,7 +353,7 @@ h1::after {
 }
 
 .filters-title {
-    font-weight: bold;
+    font-weight: 700;
     color: #333;
     margin-bottom: 20px;
 }
@@ -337,7 +361,7 @@ h1::after {
 .filter-label {
     display: block;
     margin-top: 10px;
-    color: #333;
+    color: #6D6D6D;
 }
 
 .input-field.disabled {
@@ -453,7 +477,7 @@ h1::after {
 }
 
 .data-type-label {
-    font-weight: bold;
+    font-weight: 600;
     color: #333333;
     margin-bottom: 40px;
     line-height: 1;
@@ -476,6 +500,7 @@ h1::after {
 }
 
 .salary-type-label {
+    font-weight: 500;
     color: #333333;
     margin-top: 5px;
     text-align: right;
@@ -492,6 +517,7 @@ h1::after {
 
 .salary-message-container {
     order: 2;
+    font-weight: 500;
 }
 
 .salary-message-overall span {
@@ -500,7 +526,7 @@ h1::after {
 }
 
 .salary-message-part-2 {
-    font-weight: bold;
+    font-weight: 700;
 }
 
 /* ----------------- Media queries ----------------- */
