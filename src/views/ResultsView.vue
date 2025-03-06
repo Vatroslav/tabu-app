@@ -42,8 +42,12 @@ export default defineComponent({
             salary_gross: 0,
         });
         const selectedSeniorities = ref<string[]>([]);
-        const selectedTech = ref<string>('no_technology'); // Starting values are set to empty and will be filled from submission data.
+        //const selectedTech = ref<string>('no_technology'); // Starting values are set to empty and will be filled from submission data.
         const techOptions = ref<{ tech: string; amount: number }[]>([]); // List of available technologies with amounts
+        const hasTechOptions = ref(false); // Boolean variable to check if techOptions is not null
+        const countrySalaryOptions = ref<{ country_salary: string; amount: number }[]>([]); // List of available countries with amounts
+        const contracTypeOptions = ref<{ contract_type: string; amount: number }[]>([]); // List of available contract types with amounts
+        const dataAmount = ref(0); // Amount of salaries in the current filter
 
         const locale = ref('en-US');
         const currencyStyle = ref<'currency' | 'decimal' | 'percent'>('currency'); // Can't be a simple string because of the type check.
@@ -101,12 +105,6 @@ export default defineComponent({
                             selectedSeniorities.value = [submissionData.value.seniority];
                         }
 
-                        /*
-                        if (submissionData.value.tech && submissionData.value.tech.length > 0) {
-                            techOptions.value = submissionData.value.tech.split(','); // Split tech string into array by comma
-                            selectedTech.value = techOptions.value[0]; // First tech selected as default
-                        }*/
-
                         // Only check for other data if the submission exists.
                         const additionalPositionResponse = await additionalPositionCheck(userData.value.unique_id);
                         if (additionalPositionResponse.data.success && additionalPositionResponse.data.response.exists) {
@@ -120,10 +118,31 @@ export default defineComponent({
                             //console.log('Salary:', salaryData.value);
                         }
 
-                        /*const listTechResponse = await listTechCheck(userData.value.unique_id);
-                        if (listTechResponse.data.success && listTechResponse.data.response.exists) {
-                            techOptions.value = listTechResponse.data.response;
-                            console.log('Tech:', techOptions.value);
+                        const listTechResponse = await listTechCheck(userData.value.unique_id);
+                        if (listTechResponse.data.success && listTechResponse.data.data) {
+                            techOptions.value = listTechResponse.data.data;
+                            hasTechOptions.value = techOptions.value.map(tech => tech.tech).every(tech => tech !== null);
+                            //console.log('Technologies:', techOptions.value.length);
+                            //console.log('Tech:', techOptions.value.map(tech => tech.tech));
+                            //console.log('hasTechOptions:', hasTechOptions.value);
+                        }
+
+                        const listCountrySalaryResponse = await listCountrySalaryCheck(userData.value.unique_id);
+                        if (listCountrySalaryResponse.data.success && listCountrySalaryResponse.data.data) {
+                            countrySalaryOptions.value = listCountrySalaryResponse.data.data;
+                            //console.log('Country Salary:', listCountrySalaryResponse.data.data);
+                        }
+
+                        const listContractTypeResponse = await listContractTypeCheck(userData.value.unique_id);
+                        if (listContractTypeResponse.data.success && listContractTypeResponse.data.data) {
+                            contracTypeOptions.value = listContractTypeResponse.data.data;
+                            //console.log('Contract Type:', listContractTypeResponse.data.data);
+                        }
+
+                        /*const dataAmountResponse = await dataAmountCheck(userData.value.unique_id);
+                        if (dataAmountResponse.data.success) {
+                            dataAmount.value = dataAmountResponse.data.amount;
+                            console.log('Data Amount:', dataAmount.value);
                         }*/
                     } else {
                         console.log('No submission data found');
@@ -141,7 +160,7 @@ export default defineComponent({
             }
         })
 
-        return { userData, submissionData, selectedSeniorities, toggleSeniority, selectedTech, techOptions, additionalPositionData, salaryData, formattedSalary_net, logout }
+        return { userData, submissionData, selectedSeniorities, toggleSeniority, techOptions, hasTechOptions, countrySalaryOptions, contracTypeOptions, additionalPositionData, salaryData, formattedSalary_net, logout }
     }
 })
 </script>
@@ -193,35 +212,31 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="technology" class="filter-label">Technology:</label>
-                        <select id="technology" v-model="selectedTech" class="input-field"
-                            :class="{ disabled: techOptions.length === 0 }" :disabled="techOptions.length === 0">
-                            <option v-if="techOptions.length === 0" value="no_technology">No technology</option>
-                            <option v-for="tech in techOptions" :key="tech.tech" :value="tech.tech">{{ tech.tech }} ({{
-                                tech.amount }})</option>
+                        <select id="technology" class="input-field" :class="{ disabled: hasTechOptions === false }"
+                            :disabled="hasTechOptions === false">
+                            <option v-if="hasTechOptions === false" value="no_technology">No technology
+                            </option>
+                            <option v-if="hasTechOptions === true" v-for="tech in techOptions" :key="tech.tech"
+                                :value="tech.tech">{{ tech.tech }} <!--({{
+                                tech.amount }} salaries)--></option>
                         </select>
                     </div>
 
                     <div class="filter-row">
                         <label for="country" class="filter-label">Country:</label>
                         <select id="country" class="input-field" v-model="submissionData.country_salary">
-                            <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
-                            <option value="Croatia">Croatia</option>
-                            <option value="Serbia">Serbia</option>
+                            <option v-for="country_salary in countrySalaryOptions" :key="country_salary.country_salary"
+                                :value="country_salary.country_salary">{{ country_salary.country_salary }} <!--({{
+                                country_salary.amount }} salaries)--></option>
                         </select>
                     </div>
 
                     <div class="filter-row">
                         <label for="contract" class="filter-label">Contract:</label>
                         <select id="contract" class="input-field" v-model="submissionData.contract_type">
-                            <option value="Permanent employment contract">Permanent employment contract</option>
-                            <option value="Fixed-term employment contract">Fixed-term employment contract</option>
-                            <option value="Student contract">Student contract</option>
-                            <option value="Sole proprietorship (obrt)">Sole proprietorship (obrt)</option>
-                            <option value="I have my own company">I have my own company</option>
-                            <option value="Contract for work">Contract for work</option>
-                            <option value="Gaining initial work experience/internship">Gaining initial work
-                                experience/internship</option>
-                            <option value="Copyright contract">Copyright contract</option>
+                            <option v-for="contract_type in contracTypeOptions" :key="contract_type.contract_type"
+                                :value="contract_type.contract_type">{{ contract_type.contract_type }} <!--({{
+                                contract_type.amount }} salaries)--></option>
                         </select>
                     </div>
                 </div>
@@ -370,6 +385,9 @@ h1::after {
     box-shadow: inset 0 0 0 1px #969694;
     border-radius: 3px;
     cursor: not-allowed;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 .seniority-row {
@@ -405,8 +423,8 @@ h1::after {
 .seniority-btn:disabled {
     background-color: #f5F7EE;
     cursor: not-allowed;
-    box-shadow: inset 0 0 0 1px #969694;
     color: #969694;
+    box-shadow: inset 0 0 0 1px #969694;
     border-radius: 3px;
 }
 
