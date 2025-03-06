@@ -106,19 +106,35 @@ export default defineComponent({
                         }
 
                         // Only check for other data if the submission exists.
-                        const additionalPositionResponse = await additionalPositionCheck(userData.value.unique_id);
+                        const [
+                            additionalPositionResponse,
+                            salaryResponse,
+                            listTechResponse,
+                            listCountrySalaryResponse,
+                            listContractTypeResponse,
+                            dataAmountResponse
+                        ] = await Promise.all([
+                            additionalPositionCheck(userData.value.unique_id),
+                            salaryCheck(userData.value.unique_id),
+                            listTechCheck(userData.value.unique_id),
+                            listCountrySalaryCheck(userData.value.unique_id),
+                            listContractTypeCheck(userData.value.unique_id),
+                            dataAmountCheck(userData.value.unique_id)
+                        ]);
+
+                        //const additionalPositionResponse = await additionalPositionCheck(userData.value.unique_id);
                         if (additionalPositionResponse.data.success && additionalPositionResponse.data.response.exists) {
                             additionalPositionData.value = additionalPositionResponse.data.response;
                             //console.log('Additional Position Data:', additionalPositionData.value);
                         }
 
-                        const salaryResponse = await salaryCheck(userData.value.unique_id);
+                        //const salaryResponse = await salaryCheck(userData.value.unique_id);
                         if (salaryResponse.data.success && salaryResponse.data.response.exists) {
                             salaryData.value = salaryResponse.data.response;
                             //console.log('Salary:', salaryData.value);
                         }
 
-                        const listTechResponse = await listTechCheck(userData.value.unique_id);
+                        //const listTechResponse = await listTechCheck(userData.value.unique_id);
                         if (listTechResponse.data.success && listTechResponse.data.data) {
                             techOptions.value = listTechResponse.data.data;
                             hasTechOptions.value = techOptions.value.map(tech => tech.tech).every(tech => tech !== null);
@@ -127,23 +143,23 @@ export default defineComponent({
                             //console.log('hasTechOptions:', hasTechOptions.value);
                         }
 
-                        const listCountrySalaryResponse = await listCountrySalaryCheck(userData.value.unique_id);
+                        //const listCountrySalaryResponse = await listCountrySalaryCheck(userData.value.unique_id);
                         if (listCountrySalaryResponse.data.success && listCountrySalaryResponse.data.data) {
                             countrySalaryOptions.value = listCountrySalaryResponse.data.data;
                             //console.log('Country Salary:', listCountrySalaryResponse.data.data);
                         }
 
-                        const listContractTypeResponse = await listContractTypeCheck(userData.value.unique_id);
+                        //const listContractTypeResponse = await listContractTypeCheck(userData.value.unique_id);
                         if (listContractTypeResponse.data.success && listContractTypeResponse.data.data) {
                             contracTypeOptions.value = listContractTypeResponse.data.data;
                             //console.log('Contract Type:', listContractTypeResponse.data.data);
                         }
 
-                        /*const dataAmountResponse = await dataAmountCheck(userData.value.unique_id);
-                        if (dataAmountResponse.data.success) {
-                            dataAmount.value = dataAmountResponse.data.amount;
-                            console.log('Data Amount:', dataAmount.value);
-                        }*/
+                        //const dataAmountResponse = await dataAmountCheck(userData.value.unique_id);
+                        if (dataAmountResponse.data.success && listContractTypeResponse.data.exists) {
+                            dataAmount.value = dataAmountResponse.data.data.amount;
+                            //console.log('Data Amount:', dataAmount.value);
+                        }
                     } else {
                         console.log('No submission data found');
                     }
@@ -160,7 +176,7 @@ export default defineComponent({
             }
         })
 
-        return { userData, submissionData, selectedSeniorities, toggleSeniority, techOptions, hasTechOptions, countrySalaryOptions, contracTypeOptions, additionalPositionData, salaryData, formattedSalary_net, logout }
+        return { userData, submissionData, selectedSeniorities, toggleSeniority, techOptions, hasTechOptions, countrySalaryOptions, contracTypeOptions, dataAmount, additionalPositionData, salaryData, formattedSalary_net, logout }
     }
 })
 </script>
@@ -217,8 +233,9 @@ export default defineComponent({
                             <option v-if="hasTechOptions === false" value="no_technology">No technology
                             </option>
                             <option v-if="hasTechOptions === true" v-for="tech in techOptions" :key="tech.tech"
-                                :value="tech.tech">{{ tech.tech }} <!--({{
-                                tech.amount }} salaries)--></option>
+                                :value="tech.tech">{{ tech.tech }}
+                                <!--({{ tech.amount }} salaries)-->
+                            </option>
                         </select>
                     </div>
 
@@ -226,8 +243,9 @@ export default defineComponent({
                         <label for="country" class="filter-label">Country:</label>
                         <select id="country" class="input-field" v-model="submissionData.country_salary">
                             <option v-for="country_salary in countrySalaryOptions" :key="country_salary.country_salary"
-                                :value="country_salary.country_salary">{{ country_salary.country_salary }} <!--({{
-                                country_salary.amount }} salaries)--></option>
+                                :value="country_salary.country_salary">{{ country_salary.country_salary }}
+                                <!--({{ country_salary.amount }} salaries)-->
+                            </option>
                         </select>
                     </div>
 
@@ -235,14 +253,15 @@ export default defineComponent({
                         <label for="contract" class="filter-label">Contract:</label>
                         <select id="contract" class="input-field" v-model="submissionData.contract_type">
                             <option v-for="contract_type in contracTypeOptions" :key="contract_type.contract_type"
-                                :value="contract_type.contract_type">{{ contract_type.contract_type }} <!--({{
-                                contract_type.amount }} salaries)--></option>
+                                :value="contract_type.contract_type">{{ contract_type.contract_type }}
+                                <!--({{ contract_type.amount }} salaries)-->
+                            </option>
                         </select>
                     </div>
                 </div>
                 <!----------------- Amount of salaries ----------------->
                 <div class="salaries-amount-container">
-                    <p class="salaries-amount-number" id="amount-of-salaries">176</p>
+                    <p class="salaries-amount-number" id="amount-of-salaries">{{ dataAmount }}</p>
                     <p class="salaries-amount-label">salaries in this filter</p>
                     <p class="salaries-amount-note">Modify the filters to change the salaries you're compared to.</p>
                 </div>
