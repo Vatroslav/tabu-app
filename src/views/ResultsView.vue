@@ -232,6 +232,7 @@ export default defineComponent({
                             :disabled="hasTechOptions === false">
                             <option v-if="hasTechOptions === false" value="no_technology">No technology
                             </option>
+                            <option v-if="hasTechOptions === true" selected></option>
                             <option v-if="hasTechOptions === true" v-for="tech in techOptions" :key="tech.tech"
                                 :value="tech.tech">{{ tech.tech }}
                                 <!--({{ tech.amount }} salaries)-->
