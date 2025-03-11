@@ -2,11 +2,12 @@
 import http from './api'
 
 async function dataAmountFilterCheck(
-    position_group: string,
-    position: string,
-    country_salary: string,
-    contract_type: string,
-    tech: string
+    position_group: string | null,
+    position: string | null,
+    seniority: string | null,
+    country_salary: string | null,
+    contract_type: string | null,
+    tech: string | null
 ) {
     return await http({
         url: 'api/data_amount/filter',
@@ -19,6 +20,7 @@ async function dataAmountFilterCheck(
         data: {
             parameter_position_group: position_group,
             parameter_position: position,
+            parameter_seniority: seniority,
             parameter_country_salary: country_salary,
             parameter_contract_type: contract_type,
             parameter_tech: tech

@@ -11,6 +11,7 @@ import { listTechCheck } from '@/services/list_tech';
 import { listCountrySalaryCheck } from '@/services/list_country_salary';
 import { listContractTypeCheck } from '@/services/list_contract_type';
 import { dataAmountCheck } from '@/services/data_amount';
+import { dataAmountFilterCheck } from '@/services/data_amount_filter';
 import axios from 'axios';
 
 type UserData = {
@@ -37,16 +38,19 @@ export default defineComponent({
             additional_position_group: '',
             additional_position: '',
         });
+        const selectedPositions = ref<string[]>([]); // List of positions selected by the user for comparison
         const salaryData = ref({
             salary_net: 0,
             salary_gross: 0,
         });
         const selectedSeniorities = ref<string[]>([]);
-        //const selectedTech = ref<string>('no_technology'); // Starting values are set to empty and will be filled from submission data.
-        const techOptions = ref<{ tech: string; amount: number }[]>([]); // List of available technologies with amounts
         const hasTechOptions = ref(false); // Boolean variable to check if techOptions is not null
+        const techOptions = ref<{ tech: string; amount: number }[]>([]); // List of available technologies with amounts
+        const selectedTech = ref<string[]>([]); // List of technologies selected by the user for comparison
         const countrySalaryOptions = ref<{ country_salary: string; amount: number }[]>([]); // List of available countries with amounts
+        const selectedCountrySalary = ref<string[]>([]); // List of countries selected by the user for comparison
         const contracTypeOptions = ref<{ contract_type: string; amount: number }[]>([]); // List of available contract types with amounts
+        const selectedContractType = ref<string[]>([]); // List of contract types selected by the user for comparison
         const dataAmount = ref(0); // Amount of salaries in the current filter
 
         const locale = ref('en-US');
@@ -57,15 +61,6 @@ export default defineComponent({
             localStorage.removeItem('userData')
             router.push('/login')
         }
-
-        const toggleSeniority = (seniority: string) => {
-            const index = selectedSeniorities.value.indexOf(seniority);
-            if (index === -1) {
-                selectedSeniorities.value.push(seniority);
-            } else {
-                selectedSeniorities.value.splice(index, 1);
-            }
-        };
 
         const formattedSalary_net = computed(() => {
             if (!salaryData.value.salary_net) return "N/A";
@@ -88,6 +83,91 @@ export default defineComponent({
                     minimumFractionDigits: 0
                 });
         });
+
+        const togglePosition = (position: string) => {
+            const index = selectedPositions.value.indexOf(position);
+            if (index === -1) {
+                selectedPositions.value.push(position); // Add if not already selected
+            } else {
+                selectedPositions.value.splice(index, 1); // Remove if already selected
+            }
+            updateDataAmount();
+        };
+
+        const toggleSeniority = (seniority: string) => {
+            const index = selectedSeniorities.value.indexOf(seniority);
+            if (index === -1) {
+                selectedSeniorities.value.push(seniority);
+            } else {
+                selectedSeniorities.value.splice(index, 1);
+            }
+            updateDataAmount();
+        };
+        /*
+                const toggleTechnology = (technology: string) => {
+                    const index = selectedTech.value.indexOf(technology);
+                    if (index === -1) {
+                        selectedTech.value.push(technology); // Add if not already selected
+                    } else {
+                        selectedTech.value.splice(index, 1); // Remove if already selected
+                    }
+                    updateDataAmount();
+                };
+        
+                const toggleCountrySalary = (country_salary: string) => {
+                    const index = selectedCountrySalary.value.indexOf(country_salary);
+                    if (index === -1) {
+                        selectedCountrySalary.value.push(country_salary); // Add if not already selected
+                    } else {
+                        selectedCountrySalary.value.splice(index, 1); // Remove if already selected
+                    }
+                    updateDataAmount();
+                };
+        
+                const toggleContractType = (contrac_type: string) => {
+                    const index = selectedContractType.value.indexOf(contrac_type);
+                    if (index === -1) {
+                        selectedContractType.value.push(contrac_type); // Add if not already selected
+                    } else {
+                        selectedContractType.value.splice(index, 1); // Remove if already selected
+                    }
+                    updateDataAmount();
+                };
+        */
+        const updateDataAmount = async () => {
+            try {
+                const chosenSeniority = selectedSeniorities.value.length
+                    ? selectedSeniorities.value.join('|')
+                    : null;
+
+                const chosenTech = selectedTech.value.length
+                    ? selectedTech.value.join('|')
+                    : null;
+
+                const chosenCountrySalary = selectedCountrySalary.value.length
+                    ? selectedCountrySalary.value.join('|')
+                    : null;
+
+                const chosenContractType = selectedContractType.value.length
+                    ? selectedContractType.value.join('|')
+                    : null;
+
+                const response = await dataAmountFilterCheck(
+                    submissionData.value.position_group || null,
+                    submissionData.value.position || null,
+                    chosenSeniority,
+                    chosenCountrySalary,
+                    chosenContractType,
+                    chosenTech
+                );
+
+                if (response.data.success) {
+                    dataAmount.value = response.data.data.amount;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
         onMounted(async () => {
             let localStorageString = localStorage.getItem('userData') ?? '' // Get user data from local storage
@@ -160,6 +240,8 @@ export default defineComponent({
                             dataAmount.value = dataAmountResponse.data.data.amount;
                             //console.log('Data Amount:', dataAmount.value);
                         }
+
+                        updateDataAmount();
                     } else {
                         console.log('No submission data found');
                     }
@@ -176,7 +258,26 @@ export default defineComponent({
             }
         })
 
-        return { userData, submissionData, selectedSeniorities, toggleSeniority, techOptions, hasTechOptions, countrySalaryOptions, contracTypeOptions, dataAmount, additionalPositionData, salaryData, formattedSalary_net, logout }
+        return {
+            userData,
+            submissionData,
+            selectedPositions,
+            selectedSeniorities,
+            toggleSeniority,
+            techOptions,
+            hasTechOptions,
+            selectedTech,
+            countrySalaryOptions,
+            selectedCountrySalary,
+            contracTypeOptions,
+            selectedContractType,
+            dataAmount,
+            additionalPositionData,
+            salaryData,
+            formattedSalary_net,
+            logout,
+            updateDataAmount
+        }
     }
 })
 </script>
