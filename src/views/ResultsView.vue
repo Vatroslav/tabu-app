@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue'
 import { ref, onMounted } from 'vue'
 import { computed } from 'vue'
+import Multiselect from 'vue-multiselect';
 import router from '@/router'
 import NavbarItem from '@/components/NavbarItem.vue'
 import { submissionCheck } from '@/services/submission';
@@ -22,7 +23,8 @@ type UserData = {
 export default defineComponent({
     name: 'ResultsView',
     components: {
-        NavbarItem
+        NavbarItem,
+        Multiselect
     },
     setup() {
         const userData = ref<UserData>({ name: '', unique_id: '' });
@@ -46,12 +48,14 @@ export default defineComponent({
         const selectedSeniorities = ref<string[]>([]);
         const hasTechOptions = ref(false); // Boolean variable to check if techOptions is not null
         const techOptions = ref<{ tech: string; amount: number }[]>([]); // List of available technologies with amounts
-        const selectedTech = ref<string[]>([]); // List of technologies selected by the user for comparison
+        //const selectedTech = ref<string[]>([]); // List of technologies selected by the user for comparison
+        const selectedTech = ref<string>(''); // Selected value of the technology dropdown
         const countrySalaryOptions = ref<{ country_salary: string; amount: number }[]>([]); // List of available countries with amounts
         const selectedCountrySalary = ref<string[]>([]); // List of countries selected by the user for comparison
         const contracTypeOptions = ref<{ contract_type: string; amount: number }[]>([]); // List of available contract types with amounts
         const selectedContractType = ref<string[]>([]); // List of contract types selected by the user for comparison
         const dataAmount = ref(0); // Amount of salaries in the current filter
+        const selectedPosition = ref<string>(''); // Selected value of the position dropdown
 
         const locale = ref('en-US');
         const currencyStyle = ref<'currency' | 'decimal' | 'percent'>('currency'); // Can't be a simple string because of the type check.
@@ -84,6 +88,7 @@ export default defineComponent({
                 });
         });
 
+        /*
         const togglePosition = (position: string) => {
             const index = selectedPositions.value.indexOf(position);
             if (index === -1) {
@@ -93,6 +98,7 @@ export default defineComponent({
             }
             updateDataAmount();
         };
+        */
 
         const toggleSeniority = (seniority: string) => {
             const index = selectedSeniorities.value.indexOf(seniority);
@@ -136,25 +142,57 @@ export default defineComponent({
         */
         const updateDataAmount = async () => {
             try {
+                const chosenDepartment = (() => {
+                    if (selectedPosition.value === 'other_positions_in_department') {
+                        return submissionData.value.position_group;
+                    } else {
+                        return null;
+                    }
+                })();
+
+                const chosenPosition = (() => {
+                    if (selectedPosition.value === 'my_position') {
+                        return submissionData.value.position;
+                    } else if (selectedPosition.value === 'additional_position') {
+                        return additionalPositionData.value.additional_position;
+                    } else {
+                        return null;
+                    }
+                })();
+
                 const chosenSeniority = selectedSeniorities.value.length
                     ? selectedSeniorities.value.join('|')
                     : null;
 
-                const chosenTech = selectedTech.value.length
-                    ? selectedTech.value.join('|')
-                    : null;
+                //Uključiti kad ima multiple select:
+                //const chosenTech = selectedTech.value.length
+                //    ? selectedTech.value.join('|')
+                //    : null;
 
-                const chosenCountrySalary = selectedCountrySalary.value.length
-                    ? selectedCountrySalary.value.join('|')
-                    : null;
+                const chosenTech = selectedTech.value || null;
 
-                const chosenContractType = selectedContractType.value.length
-                    ? selectedContractType.value.join('|')
-                    : null;
+                //Uključiti kad ima multiple select:
+                //const chosenCountrySalary = selectedCountrySalary.value.length
+                //    ? selectedCountrySalary.value.join('|');
+
+                const chosenCountrySalary = submissionData.value.country_salary;
+
+                //Uključiti kad ima multiple select:
+                //const chosenContractType = selectedContractType.value.length
+                //    ? selectedContractType.value.join('|');
+
+                const chosenContractType = submissionData.value.contract_type;
+
+                console.log('Chosen Position group:', chosenDepartment);
+                console.log('Chosen Position:', chosenPosition);
+                console.log('Chosen Seniority:', chosenSeniority);
+                console.log('Chosen Country Salary:', chosenCountrySalary);
+                console.log('Chosen Contract Type:', chosenContractType);
+                console.log('Chosen Tech:', chosenTech);
 
                 const response = await dataAmountFilterCheck(
-                    submissionData.value.position_group || null,
-                    submissionData.value.position || null,
+                    chosenDepartment,
+                    chosenPosition,
                     chosenSeniority,
                     chosenCountrySalary,
                     chosenContractType,
@@ -162,7 +200,11 @@ export default defineComponent({
                 );
 
                 if (response.data.success) {
-                    dataAmount.value = response.data.data.amount;
+                    console.log('Response data:', response.data);
+                    console.log('Data amount:', response.data.response.data.data_amount);
+                    console.log('salary_net_avg:', response.data.response.data.salary_net_avg);
+                    console.log('salary_net_median:', response.data.response.data.salary_net_median);
+                    dataAmount.value = response.data.response.data.data_amount;
                 }
             } catch (error) {
                 console.error(error);
@@ -181,6 +223,11 @@ export default defineComponent({
                     if (submissionResponse.data.success && submissionResponse.data.response.exists) {
                         submissionData.value = submissionResponse.data.response;
                         //console.log('Submission Data:', submissionData.value);
+
+                        if (submissionData.value.position) {
+                            selectedPosition.value = 'my_position'
+                        }
+
                         if (submissionData.value.seniority !== 'N/A') {
                             selectedSeniorities.value = [submissionData.value.seniority];
                         }
@@ -192,14 +239,14 @@ export default defineComponent({
                             listTechResponse,
                             listCountrySalaryResponse,
                             listContractTypeResponse,
-                            dataAmountResponse
+                            //dataAmountResponse
                         ] = await Promise.all([
                             additionalPositionCheck(userData.value.unique_id),
                             salaryCheck(userData.value.unique_id),
                             listTechCheck(userData.value.unique_id),
                             listCountrySalaryCheck(userData.value.unique_id),
                             listContractTypeCheck(userData.value.unique_id),
-                            dataAmountCheck(userData.value.unique_id)
+                            //dataAmountCheck(userData.value.unique_id)
                         ]);
 
                         //const additionalPositionResponse = await additionalPositionCheck(userData.value.unique_id);
@@ -236,10 +283,10 @@ export default defineComponent({
                         }
 
                         //const dataAmountResponse = await dataAmountCheck(userData.value.unique_id);
-                        if (dataAmountResponse.data.success && listContractTypeResponse.data.exists) {
-                            dataAmount.value = dataAmountResponse.data.data.amount;
-                            //console.log('Data Amount:', dataAmount.value);
-                        }
+                        //if (dataAmountResponse.data.success && listContractTypeResponse.data.exists) {
+                        //    dataAmount.value = dataAmountResponse.data.data.amount;
+                        //    //console.log('Data Amount:', dataAmount.value);
+                        //}
 
                         updateDataAmount();
                     } else {
@@ -261,6 +308,7 @@ export default defineComponent({
         return {
             userData,
             submissionData,
+            selectedPosition,
             selectedPositions,
             selectedSeniorities,
             toggleSeniority,
@@ -297,8 +345,9 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="position" class="filter-label">Position:</label>
-                        <select id="position" class="input-field">
-                            <option value="my_position" selected>{{ submissionData.position }}</option>
+                        <select id="position" class="input-field" v-model="selectedPosition" @change="updateDataAmount">
+                            <option value="my_position" selected>
+                                {{ submissionData.position }}</option>
                             <option value="other_positions_in_department">Other positions in {{
                                 submissionData.position_group }}</option>
                             <option v-if="additionalPositionData.additional_position" value="additional_position">
@@ -329,8 +378,12 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="technology" class="filter-label">Technology:</label>
+                        <!--<Multiselect v-model="selectedTech" :options="techOptions" label="tech" track-by="tech"
+                            :multiple="true" :close-on-select="false" :clear-on-select="false"
+                            placeholder="Pick technology..." @input="updateDataAmount()">
+                        </Multiselect>-->
                         <select id="technology" class="input-field" :class="{ disabled: hasTechOptions === false }"
-                            :disabled="hasTechOptions === false">
+                            :disabled="hasTechOptions === false" v-model="selectedTech" @change="updateDataAmount">
                             <option v-if="hasTechOptions === false" value="no_technology">No technology
                             </option>
                             <option v-if="hasTechOptions === true" selected></option>
@@ -343,9 +396,11 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="country" class="filter-label">Country:</label>
-                        <select id="country" class="input-field" v-model="submissionData.country_salary">
+                        <select id="country" class="input-field" v-model="submissionData.country_salary"
+                            @change="updateDataAmount">
                             <option v-for="country_salary in countrySalaryOptions" :key="country_salary.country_salary"
-                                :value="country_salary.country_salary">{{ country_salary.country_salary }}
+                                :value="country_salary.country_salary">{{
+                                    country_salary.country_salary }}
                                 <!--({{ country_salary.amount }} salaries)-->
                             </option>
                         </select>
@@ -353,9 +408,11 @@ export default defineComponent({
 
                     <div class="filter-row">
                         <label for="contract" class="filter-label">Contract:</label>
-                        <select id="contract" class="input-field" v-model="submissionData.contract_type">
+                        <select id="contract" class="input-field" v-model="submissionData.contract_type"
+                            @change="updateDataAmount">
                             <option v-for="contract_type in contracTypeOptions" :key="contract_type.contract_type"
-                                :value="contract_type.contract_type">{{ contract_type.contract_type }}
+                                :value="contract_type.contract_type">{{
+                                    contract_type.contract_type }}
                                 <!--({{ contract_type.amount }} salaries)-->
                             </option>
                         </select>
