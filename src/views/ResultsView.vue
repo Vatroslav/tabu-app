@@ -13,6 +13,8 @@ import { listCountrySalaryCheck } from '@/services/list_country_salary';
 import { listContractTypeCheck } from '@/services/list_contract_type';
 import { dataAmountCheck } from '@/services/data_amount';
 import { dataAmountFilterCheck } from '@/services/data_amount_filter';
+import polygonUpturnedGreen from '@/assets/polygon_upturned_green.webp';
+import polygonDownturnedRed from '@/assets/polygon_donwturned_red.webp';
 import axios from 'axios';
 
 type UserData = {
@@ -40,11 +42,9 @@ export default defineComponent({
             additional_position_group: '',
             additional_position: '',
         });
+
         const selectedPositions = ref<string[]>([]); // List of positions selected by the user for comparison
-        const salaryData = ref({
-            salary_net: 0,
-            salary_gross: 0,
-        });
+        const selectedPosition = ref<string>(''); // Selected value of the position dropdown
         const selectedSeniorities = ref<string[]>([]);
         const hasTechOptions = ref(false); // Boolean variable to check if techOptions is not null
         const techOptions = ref<{ tech: string; amount: number }[]>([]); // List of available technologies with amounts
@@ -54,8 +54,16 @@ export default defineComponent({
         const selectedCountrySalary = ref<string[]>([]); // List of countries selected by the user for comparison
         const contracTypeOptions = ref<{ contract_type: string; amount: number }[]>([]); // List of available contract types with amounts
         const selectedContractType = ref<string[]>([]); // List of contract types selected by the user for comparison
+        const salaryData = ref({
+            salary_net: 0,
+            salary_gross: 0,
+        });
+
         const dataAmount = ref(0); // Amount of salaries in the current filter
-        const selectedPosition = ref<string>(''); // Selected value of the position dropdown
+        const salaryAverage_net = ref(0);
+        const salaryMedian_net = ref(0);
+        const salaryAverage_gross = ref(0);
+        const salaryMedian_gross = ref(0);
 
         const locale = ref('en-US');
         const currencyStyle = ref<'currency' | 'decimal' | 'percent'>('currency'); // Can't be a simple string because of the type check.
@@ -66,26 +74,116 @@ export default defineComponent({
             router.push('/login')
         }
 
-        const formattedSalary_net = computed(() => {
-            if (!salaryData.value.salary_net) return "N/A";
-            return salaryData.value.salary_net.toLocaleString(
+        function formatSalary(amount: number | null | undefined): string {
+            if (!amount) return "N/A";
+            return amount.toLocaleString(
                 locale.value,
                 {
                     style: currencyStyle.value,
                     currency: currencyType.value,
                     minimumFractionDigits: 0
-                });
+                }
+            );
+        }
+
+        const formattedUserSalary_net = computed(() => {
+            return formatSalary(salaryData.value.salary_net);
         });
 
-        const formattedSalary_gross = computed(() => {
-            if (!salaryData.value.salary_gross) return "N/A";
-            return salaryData.value.salary_gross.toLocaleString(
-                locale.value,
-                {
-                    style: currencyStyle.value,
-                    currency: currencyType.value,
-                    minimumFractionDigits: 0
-                });
+        const formattedUserSalary_gross = computed(() => {
+            return formatSalary(salaryData.value.salary_gross);
+        });
+
+        const formattedMarketSalaryAverage_net = computed(() => {
+            return formatSalary(salaryAverage_net.value);
+        });
+
+        const formattedMarketSalaryAverage_gross = computed(() => {
+            return formatSalary(salaryAverage_gross.value);
+        });
+
+        const formattedMarketSalaryMedian_net = computed(() => {
+            return formatSalary(salaryMedian_net.value);
+        });
+
+        const formattedMarketSalaryMedian_gross = computed(() => {
+            return formatSalary(salaryMedian_gross.value);
+        });
+
+        const diffUserToAverageDisplay = computed(() => {
+            const diff_net = salaryData.value.salary_net - salaryAverage_net.value;
+            const diff_gross = salaryData.value.salary_gross - salaryAverage_gross.value;
+
+            const isPositive_net = diff_net >= 0;
+            const isPositive_gross = diff_gross >= 0;
+
+            const formattedDiff_net = formatSalary(Math.abs(diff_net));
+            const formattedDiff_gross = formatSalary(Math.abs(diff_gross));
+
+            const polygonSrc_net = isPositive_net
+                ? polygonUpturnedGreen
+                : polygonDownturnedRed;
+            const polygonSrc_gross = isPositive_gross
+                ? polygonUpturnedGreen
+                : polygonDownturnedRed;
+
+            const altText_net = isPositive_net ? 'Upward Polygon' : 'Downward Polygon';
+            const altText_gross = isPositive_gross ? 'Upward Polygon' : 'Downward Polygon';
+
+            const lowerHigher_net = isPositive_net ? 'higher' : 'lower';
+            const lowerHigher_gross = isPositive_gross ? 'higher' : 'lower';
+
+            return {
+                isPositive_net,
+                isPositive_gross,
+                formattedDiff_net,
+                formattedDiff_gross,
+                polygonSrc_net,
+                polygonSrc_gross,
+                altText_net,
+                altText_gross,
+                lowerHigher_net,
+                lowerHigher_gross
+            };
+        });
+
+
+
+        const diffUserToMedianDisplay = computed(() => {
+            const diff_net = salaryData.value.salary_net - salaryMedian_net.value;
+            const diff_gross = salaryData.value.salary_gross - salaryMedian_gross.value;
+
+            const isPositive_net = diff_net >= 0;
+            const isPositive_gross = diff_gross >= 0;
+
+            const formattedDiff_net = formatSalary(Math.abs(diff_net));
+            const formattedDiff_gross = formatSalary(Math.abs(diff_gross));
+
+            const polygonSrc_net = isPositive_net
+                ? polygonUpturnedGreen
+                : polygonDownturnedRed;
+            const polygonSrc_gross = isPositive_gross
+                ? polygonUpturnedGreen
+                : polygonDownturnedRed;
+
+            const altText_net = isPositive_net ? 'Upward Polygon' : 'Downward Polygon';
+            const altText_gross = isPositive_gross ? 'Upward Polygon' : 'Downward Polygon';
+
+            const lowerHigher_net = isPositive_net ? 'higher' : 'lower';
+            const lowerHigher_gross = isPositive_gross ? 'higher' : 'lower';
+
+            return {
+                isPositive_net,
+                isPositive_gross,
+                formattedDiff_net,
+                formattedDiff_gross,
+                polygonSrc_net,
+                polygonSrc_gross,
+                altText_net,
+                altText_gross,
+                lowerHigher_net,
+                lowerHigher_gross
+            };
         });
 
         /*
@@ -190,7 +288,7 @@ export default defineComponent({
                 console.log('Chosen Contract Type:', chosenContractType);
                 console.log('Chosen Tech:', chosenTech);
 
-                const response = await dataAmountFilterCheck(
+                const api_response = await dataAmountFilterCheck(
                     chosenDepartment,
                     chosenPosition,
                     chosenSeniority,
@@ -199,12 +297,11 @@ export default defineComponent({
                     chosenTech
                 );
 
-                if (response.data.success) {
-                    console.log('Response data:', response.data);
-                    console.log('Data amount:', response.data.response.data.data_amount);
-                    console.log('salary_net_avg:', response.data.response.data.salary_net_avg);
-                    console.log('salary_net_median:', response.data.response.data.salary_net_median);
-                    dataAmount.value = response.data.response.data.data_amount;
+                if (api_response.data.success) {
+                    console.log('Response data:', api_response.data);
+                    dataAmount.value = api_response.data.response.data.data_amount;
+                    salaryAverage_net.value = api_response.data.response.data.salary_net_avg;
+                    salaryMedian_net.value = api_response.data.response.data.salary_net_median;
                 }
             } catch (error) {
                 console.error(error);
@@ -320,9 +417,18 @@ export default defineComponent({
             contracTypeOptions,
             selectedContractType,
             dataAmount,
+            salaryAverage_net,
+            salaryMedian_net,
             additionalPositionData,
             salaryData,
-            formattedSalary_net,
+            formattedUserSalary_net,
+            formattedUserSalary_gross,
+            formattedMarketSalaryAverage_net,
+            formattedMarketSalaryAverage_gross,
+            formattedMarketSalaryMedian_net,
+            formattedMarketSalaryMedian_gross,
+            diffUserToAverageDisplay,
+            diffUserToMedianDisplay,
             logout,
             updateDataAmount
         }
@@ -430,25 +536,31 @@ export default defineComponent({
                 <div class="my-salary-container">
                     <p class="data-type-label">My salary</p>
                     <div class="salary-container-no-border">
-                        <p class="salary-my">{{ formattedSalary_net }}</p>
+                        <p class="salary-my">{{ formattedUserSalary_net }}</p>
                         <p class="salary-type-label">net salary</p>
                     </div>
                 </div>
                 <div class="average-salary-container">
                     <p class="data-type-label">Average</p>
                     <div class="salary-container-border">
-                        <p class="salary-value">1,538 €</p>
+                        <p class="salary-value">{{ formattedMarketSalaryAverage_net }}</p>
                         <p class="salary-type-label">net salary</p>
                     </div>
                     <div class="salary-message-overall">
                         <div class="salary-icon-container">
                             <img id="salary-message-average-icon" class="salary-icon"
-                                src="@/assets/polygon_donwturned_red.webp" alt="Downward Polygon" />
+                                :src="diffUserToAverageDisplay.polygonSrc_net"
+                                :alt="diffUserToAverageDisplay.altText_net" />
                         </div>
                         <div class="salary-message-container">
                             <span class="salary-message-part-1">your salary is</span>
-                            <span id="salary-message-average-value" class="salary-message-part-2">304 €</span>
-                            <span id="salary-message-average-lowerhigher" class="salary-message-part-3">lower</span>
+                            <span id="salary-message-average-value" class="salary-message-part-2" :class="{
+                                'diff-positive': diffUserToAverageDisplay.isPositive_net,
+                                'diff-negative': !diffUserToAverageDisplay.isPositive_net
+                            }">
+                                {{ diffUserToAverageDisplay.formattedDiff_net }}</span>
+                            <span id="salary-message-average-lowerhigher" class="salary-message-part-3">
+                                {{ diffUserToAverageDisplay.lowerHigher_net }}</span>
                             <span class="salary-message-part-4">than the average on your position</span>
                         </div>
                     </div>
@@ -456,18 +568,24 @@ export default defineComponent({
                 <div class="median-salary-container">
                     <p class="data-type-label">Median</p>
                     <div class="salary-container-border">
-                        <p class="salary-value">1,465 €</p>
+                        <p class="salary-value">{{ formattedMarketSalaryMedian_net }}</p>
                         <p class="salary-type-label">net salary</p>
                     </div>
                     <div class="salary-message-overall">
                         <div class="salary-icon-container">
                             <img id="salary-message-average-icon" class="salary-icon"
-                                src="@/assets/polygon_upturned_green.webp" alt="Upward Polygon" />
+                                :src="diffUserToMedianDisplay.polygonSrc_net"
+                                :alt="diffUserToMedianDisplay.altText_net" />
                         </div>
                         <div class="salary-message-container">
                             <span class="salary-message-part-1">your salary is</span>
-                            <span id="salary-message-median-value" class="salary-message-part-2">231 €</span>
-                            <span id="salary-message-median-lowerhigher" class="salary-message-part-3">higher</span>
+                            <span id="salary-message-median-value" class="salary-message-part-2" :class="{
+                                'diff-positive': diffUserToAverageDisplay.isPositive_net,
+                                'diff-negative': !diffUserToAverageDisplay.isPositive_net
+                            }">
+                                {{ diffUserToMedianDisplay.formattedDiff_net }}</span>
+                            <span id="salary-message-median-lowerhigher" class="salary-message-part-3">
+                                {{ diffUserToMedianDisplay.lowerHigher_net }}</span>
                             <span class="salary-message-part-4">than the median on your position</span>
                         </div>
                     </div>
@@ -724,6 +842,15 @@ h1::after {
 .salary-message-part-2 {
     font-weight: 700;
 }
+
+.diff-positive {
+    color: #15BE02;
+}
+
+.diff-negative {
+    color: #FF0404;
+}
+
 
 /* ----------------- Media queries ----------------- */
 
