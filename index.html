@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabu App</title>
+</head>
+
+<body>
+  <div class="container">
+    <div id="app"></div>
+    <img src="tabu_big_logo.webp" alt="Tabu Logo" class="big-logo" />
+    <img src="tabu_big_logo_mobile.webp" alt="Tabu Logo" class="big-logo-mobile" />
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
+
+<script src="https://accounts.google.com/gsi/client" async defer>
+
+  window.onload = function () {
+    google.accounts.id.initialize({
+      client_id: "440674347475-j4259sobnoq0sdl4h0010r38po015gdp.apps.googleusercontent.com",
+      callback: (response) => console.log(response)
+    });
+    google.accounts.id.prompt();
+  };
+
+</script>
+
+
+<style>
+  body {
+    height: 100%;
+    font-family: Matter, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #333333;
+    background-color: #f5F7EE;
+  }
+
+  .container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #app {
+    flex: 1;
+  }
+
+  .big-logo {
+    position: absolute;
+    right: 0;
+    top: 0;
+    max-height: 100vh;
+    max-width: 100vw;
+    z-index: -1;
+  }
+
+  .big-logo-mobile {
+    width: 100%;
+    object-fit: cover;
+    padding-top: 50px;
+    z-index: -1;
+  }
+
+  @media (max-width: 768px) {
+    .big-logo {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .big-logo-mobile {
+      display: none;
+    }
+  }
+</style>

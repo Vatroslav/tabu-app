@@ -1,0 +1,83 @@
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-LightItalic.otf') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-RegularItalic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-MediumItalic.otf') format('opentype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-SemiBoldItalic.otf') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-BoldItalic.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-Heavy.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Matter';
+    src: url('@/assets/fonts/Matter-HeavyItalic.otf') format('opentype');
+    font-weight: 800;
+    font-style: italic;
+}
