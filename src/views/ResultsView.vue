@@ -11,7 +11,6 @@ import { salaryCheck } from '@/services/salary';
 import { listTechCheck } from '@/services/list_tech';
 import { listCountrySalaryCheck } from '@/services/list_country_salary';
 import { listContractTypeCheck } from '@/services/list_contract_type';
-import { dataAmountCheck } from '@/services/data_amount';
 import { dataAmountFilterCheck } from '@/services/data_amount_filter';
 import polygonUpturnedGreen from '@/assets/polygon_upturned_green.webp';
 import polygonDownturnedRed from '@/assets/polygon_donwturned_red.webp';
@@ -147,8 +146,6 @@ export default defineComponent({
             };
         });
 
-
-
         const diffUserToMedianDisplay = computed(() => {
             const diff_net = salaryData.value.salary_net - salaryMedian_net.value;
             const diff_gross = salaryData.value.salary_gross - salaryMedian_gross.value;
@@ -260,7 +257,7 @@ export default defineComponent({
 
                 const chosenSeniority = selectedSeniorities.value.length
                     ? selectedSeniorities.value.join('|')
-                    : null;
+                    : "N/A";
 
                 //Uključiti kad ima multiple select:
                 //const chosenTech = selectedTech.value.length
@@ -281,12 +278,12 @@ export default defineComponent({
 
                 const chosenContractType = submissionData.value.contract_type;
 
-                console.log('Chosen Position group:', chosenDepartment);
-                console.log('Chosen Position:', chosenPosition);
-                console.log('Chosen Seniority:', chosenSeniority);
-                console.log('Chosen Country Salary:', chosenCountrySalary);
-                console.log('Chosen Contract Type:', chosenContractType);
-                console.log('Chosen Tech:', chosenTech);
+                // console.log('Chosen Position group:', chosenDepartment);
+                // console.log('Chosen Position:', chosenPosition);
+                // console.log('Chosen Seniority:', chosenSeniority);
+                // console.log('Chosen Country Salary:', chosenCountrySalary);
+                // console.log('Chosen Contract Type:', chosenContractType);
+                // console.log('Chosen Tech:', chosenTech);
 
                 const api_response = await dataAmountFilterCheck(
                     chosenDepartment,
@@ -298,10 +295,15 @@ export default defineComponent({
                 );
 
                 if (api_response.data.success) {
-                    console.log('Response data:', api_response.data);
+                    //console.log('Response data:', api_response.data);
                     dataAmount.value = api_response.data.response.data.data_amount;
                     salaryAverage_net.value = api_response.data.response.data.salary_net_avg;
                     salaryMedian_net.value = api_response.data.response.data.salary_net_median;
+                } else {
+                    //console.error('Error fetching data amount:', api_response.data.message);
+                    dataAmount.value = 0;
+                    salaryAverage_net.value = 0;
+                    salaryMedian_net.value = 0;
                 }
             } catch (error) {
                 console.error(error);
@@ -336,29 +338,29 @@ export default defineComponent({
                             listTechResponse,
                             listCountrySalaryResponse,
                             listContractTypeResponse,
-                            //dataAmountResponse
                         ] = await Promise.all([
                             additionalPositionCheck(userData.value.unique_id),
                             salaryCheck(userData.value.unique_id),
                             listTechCheck(userData.value.unique_id),
                             listCountrySalaryCheck(userData.value.unique_id),
                             listContractTypeCheck(userData.value.unique_id),
-                            //dataAmountCheck(userData.value.unique_id)
                         ]);
 
-                        //const additionalPositionResponse = await additionalPositionCheck(userData.value.unique_id);
                         if (additionalPositionResponse.data.success && additionalPositionResponse.data.response.exists) {
                             additionalPositionData.value = additionalPositionResponse.data.response;
                             //console.log('Additional Position Data:', additionalPositionData.value);
+                        } else {
+                            additionalPositionData.value = {
+                                additional_position_group: '',
+                                additional_position: ''
+                            };
                         }
 
-                        //const salaryResponse = await salaryCheck(userData.value.unique_id);
                         if (salaryResponse.data.success && salaryResponse.data.response.exists) {
                             salaryData.value = salaryResponse.data.response;
                             //console.log('Salary:', salaryData.value);
                         }
 
-                        //const listTechResponse = await listTechCheck(userData.value.unique_id);
                         if (listTechResponse.data.success && listTechResponse.data.data) {
                             techOptions.value = listTechResponse.data.data;
                             hasTechOptions.value = techOptions.value.map(tech => tech.tech).every(tech => tech !== null);
@@ -367,23 +369,15 @@ export default defineComponent({
                             //console.log('hasTechOptions:', hasTechOptions.value);
                         }
 
-                        //const listCountrySalaryResponse = await listCountrySalaryCheck(userData.value.unique_id);
                         if (listCountrySalaryResponse.data.success && listCountrySalaryResponse.data.data) {
                             countrySalaryOptions.value = listCountrySalaryResponse.data.data;
                             //console.log('Country Salary:', listCountrySalaryResponse.data.data);
                         }
 
-                        //const listContractTypeResponse = await listContractTypeCheck(userData.value.unique_id);
                         if (listContractTypeResponse.data.success && listContractTypeResponse.data.data) {
                             contracTypeOptions.value = listContractTypeResponse.data.data;
                             //console.log('Contract Type:', listContractTypeResponse.data.data);
                         }
-
-                        //const dataAmountResponse = await dataAmountCheck(userData.value.unique_id);
-                        //if (dataAmountResponse.data.success && listContractTypeResponse.data.exists) {
-                        //    dataAmount.value = dataAmountResponse.data.data.amount;
-                        //    //console.log('Data Amount:', dataAmount.value);
-                        //}
 
                         updateDataAmount();
                     } else {
@@ -441,9 +435,8 @@ export default defineComponent({
         <NavbarItem />
         <div class="results">
             <h1>My salary comparison</h1>
-            <p style="color: red;">Hello {{ userData.name }}! Your unique_id is {{ userData.unique_id }}.
-            </p>
-            <button @click="logout">Logout</button>
+            <!--<p style="color: red;">Hello {{ userData.name }}! Your unique_id is {{ userData.unique_id }}.</p>-->
+            <!--<button @click="logout">Logout</button>-->
             <!----------------- Filters ----------------->
             <div class="overall-filter-section">
                 <div class="filters">
@@ -546,7 +539,7 @@ export default defineComponent({
                         <p class="salary-value">{{ formattedMarketSalaryAverage_net }}</p>
                         <p class="salary-type-label">net salary</p>
                     </div>
-                    <div class="salary-message-overall">
+                    <div class="salary-message-overall" v-if="salaryAverage_net > 0">
                         <div class="salary-icon-container">
                             <img id="salary-message-average-icon" class="salary-icon"
                                 :src="diffUserToAverageDisplay.polygonSrc_net"
@@ -571,7 +564,7 @@ export default defineComponent({
                         <p class="salary-value">{{ formattedMarketSalaryMedian_net }}</p>
                         <p class="salary-type-label">net salary</p>
                     </div>
-                    <div class="salary-message-overall">
+                    <div class="salary-message-overall" v-if="salaryMedian_net > 0">
                         <div class="salary-icon-container">
                             <img id="salary-message-average-icon" class="salary-icon"
                                 :src="diffUserToMedianDisplay.polygonSrc_net"
@@ -910,8 +903,8 @@ h1::after {
 
     /* Data containers */
     .overall-data-section {
-        margin-top: 250px;
-        /* Adjust this value to ensure content starts below the inital view */
+        margin-top: 50px;
+        /* Adjust this to ensure content starts below the inital view */
     }
 
     .salary-container-border {
