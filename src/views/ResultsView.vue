@@ -816,10 +816,12 @@ h1::after {
 
 .salary-message-overall {
     display: flex;
+    margin-top: 5px;
 }
 
 .salary-icon-container {
     order: 1;
+    margin-right: 5px;
 }
 
 .salary-message-container {
