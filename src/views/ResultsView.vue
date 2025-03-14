@@ -521,7 +521,8 @@ export default defineComponent({
                 <div class="salaries-amount-container">
                     <p class="salaries-amount-number" id="amount-of-salaries">{{ dataAmount }}</p>
                     <p class="salaries-amount-label">salaries in this filter</p>
-                    <p class="salaries-amount-note">Modify the filters to change the salaries you're compared to.</p>
+                    <p class="salaries-amount-note">Modify the filters to change the salaries you're compared to.
+                    </p>
                 </div>
             </div>
             <!----------------- Data containers ----------------->
@@ -554,7 +555,7 @@ export default defineComponent({
                                 {{ diffUserToAverageDisplay.formattedDiff_net }}</span>
                             <span id="salary-message-average-lowerhigher" class="salary-message-part-3">
                                 {{ diffUserToAverageDisplay.lowerHigher_net }}</span>
-                            <span class="salary-message-part-4">than the average on your position</span>
+                            <span class="salary-message-part-4">than the average for these filters</span>
                         </div>
                     </div>
                 </div>
@@ -579,19 +580,11 @@ export default defineComponent({
                                 {{ diffUserToMedianDisplay.formattedDiff_net }}</span>
                             <span id="salary-message-median-lowerhigher" class="salary-message-part-3">
                                 {{ diffUserToMedianDisplay.lowerHigher_net }}</span>
-                            <span class="salary-message-part-4">than the median on your position</span>
+                            <span class="salary-message-part-4">than the median for these filters</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!--
-        <div id="user_details" v-if="userDetails">
-          <h2>User Details</h2>
-          <p>Name: {{ userDetails.name }}</p>
-          <p>Email: {{ userDetails.email }}</p>
-        </div>
-        -->
         </div>
     </div>
 </template>
@@ -606,11 +599,12 @@ export default defineComponent({
 }
 
 h1 {
+    align-self: flex-start;
     font-weight: 600;
     color: #333;
     position: relative;
     display: inline-block;
-    margin-bottom: 50px;
+    margin-bottom: 1vh;
 }
 
 h1::after {
@@ -627,6 +621,7 @@ h1::after {
 .overall-filter-section {
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 5vh;
 }
 
 /* ----------------- Filters ----------------- */
