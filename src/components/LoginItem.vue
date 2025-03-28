@@ -23,6 +23,7 @@ import type { CallbackTypes } from 'vue3-google-login'
 import { checkEmail } from '@/services/auth/google'
 import router from '@/router'
 import { ref, computed } from 'vue'
+import { handleLogout } from '@/services/logout'
 
 type GoogleUserData = {
   email: string
@@ -31,32 +32,19 @@ type GoogleUserData = {
 
 const showRegister = ref(false)
 
-const callback: CallbackTypes.CredentialCallback = async response => {
+const callback: CallbackTypes.CredentialCallback = async response => {console.log(response);console.log(decodeCredential(
+    response.credential,
+  ));
   // This callback will be triggered when the user selects or logs in to their Google account from the popup
   const userData: GoogleUserData = decodeCredential(
     response.credential,
   ) as GoogleUserData
-  checkEmail(userData.given_name, userData.email).then(function (resp) {
-    // Sends API request to get the response "resp", then uses that response to get the required data.
-    if (resp.data.success) {
-      if (!resp.data.response.exists) {
-        console.log('User email does not exist, logging out')
-        localStorage.removeItem('userData')
-        showRegister.value = true
-        router.push({ path: 'login' })
-      } else {
-        //console.log('Successfully logged in')
-        showRegister.value = false
-        const localUser = {
-          name: resp.data.response.name,
-          unique_id: resp.data.response.id,
-        }
-        localStorage.setItem('userData', JSON.stringify(localUser)) // Save user data to local storage
-        router.push({ path: 'results' })
-      }
-    } else {
-      console.error('Error', resp.data.error ?? ' logging in!')
+  checkEmail(userData.given_name, userData.email, response.credential).then(function (resp) {
+    if (!resp.success) {
+      console.error('Error', resp.error ?? ' logging in!')
+      return
     }
+    showRegister.value = resp.showRegister || false
   })
 }
 
