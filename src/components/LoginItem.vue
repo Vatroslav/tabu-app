@@ -32,9 +32,7 @@ type GoogleUserData = {
 
 const showRegister = ref(false)
 
-const callback: CallbackTypes.CredentialCallback = async response => {console.log(response);console.log(decodeCredential(
-    response.credential,
-  ));
+const callback: CallbackTypes.CredentialCallback = async response => {
   // This callback will be triggered when the user selects or logs in to their Google account from the popup
   const userData: GoogleUserData = decodeCredential(
     response.credential,
