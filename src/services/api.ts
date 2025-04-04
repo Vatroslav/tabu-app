@@ -33,13 +33,20 @@ const createApiInstance = () => {
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
         const refreshToken = localStorage.getItem('refreshToken')
-        const refreshResponse = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/api/auth/refresh-token`, {
-          refreshToken,
-        })
-        setTokens(refreshResponse.data.accessToken, refreshResponse.data.refreshToken)
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + refreshResponse.data.accessToken
-        originalRequest.headers['Authorization'] = 'Bearer ' + refreshResponse.data.accessToken
-        return instance(originalRequest)
+        try {
+          const refreshResponse = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/api/auth/refresh-token`, {
+            refreshToken,
+          })
+          setTokens(refreshResponse.data.accessToken, refreshResponse.data.refreshToken)
+          axios.defaults.headers.common['Authorization'] = 'Bearer ' + refreshResponse.data.accessToken
+          originalRequest.headers['Authorization'] = 'Bearer ' + refreshResponse.data.accessToken
+          return instance(originalRequest)
+        } catch (refreshError) {
+          if (axios.isAxiosError(refreshError) && refreshError.response?.status === 400) {
+            window.location.href = '/logout'
+          }
+          return Promise.reject(error)
+        }
       }
       return Promise.reject(error)
     }
