@@ -1,3 +1,4 @@
+import { setTokens } from './index'
 // the axios instance and types
 import http from '../api'
 import router from '@/router'
@@ -21,8 +22,7 @@ async function checkEmail(name: string, email: string, credential: string) {
   const data = response.data
   if (data.success && data.response.tokens) {
     const { accessToken, refreshToken } = data.response.tokens
-    localStorage.setItem('accessToken', accessToken)
-    localStorage.setItem('refreshToken', refreshToken)
+    setTokens(accessToken, refreshToken)
     localStorage.setItem('userData', JSON.stringify({
       "name": data.response.name,
       "unique_id": data.response.id
@@ -31,12 +31,9 @@ async function checkEmail(name: string, email: string, credential: string) {
     delete data.response.tokens
     
     if (data.success) {
-      if (!data.response.exists) {
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
-        localStorage.removeItem('userData')
-        router.push('/login')
-        return { ...data, showRegister: true }
+        if (!data.response.exists) {
+          router.push('/logout')
+          return
       } else {
         router.push('/results')
       }
