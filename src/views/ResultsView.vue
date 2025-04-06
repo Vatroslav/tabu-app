@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import { computed } from 'vue'
 import Multiselect from 'vue-multiselect';
 import router from '@/router'
+import { handleLogout } from '@/services/logout'
 import NavbarItem from '@/components/NavbarItem.vue'
 import { submissionCheck } from '@/services/submission';
 import { additionalPositionCheck } from '@/services/additional_position';
@@ -69,8 +70,7 @@ export default defineComponent({
         const currencyType = ref('EUR');
 
         const logout = () => {
-            localStorage.removeItem('userData')
-            router.push('/login')
+            handleLogout()
         }
 
         function formatSalary(amount: number | null | undefined): string {
