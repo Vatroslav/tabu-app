@@ -40,9 +40,13 @@ const callback: CallbackTypes.CredentialCallback = async response => {
   checkEmail(userData.given_name, userData.email, response.credential).then(function (resp) {
     if (!resp.success) {
       console.error('Error', resp.error ?? ' logging in!')
+      showRegister.value = true // Show registration message on error
       return
     }
-    showRegister.value = resp.showRegister || false
+    showRegister.value = !resp.response.exists
+  }).catch(error => {
+    console.error('Login error:', error)
+    showRegister.value = true // Show registration message on error
   })
 }
 
