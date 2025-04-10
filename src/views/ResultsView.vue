@@ -339,7 +339,10 @@ export default defineComponent({
                             listCountrySalaryResponse,
                             listContractTypeResponse,
                         ] = await Promise.all([
-                            additionalPositionCheck(userData.value.unique_id),
+                            additionalPositionCheck(userData.value.unique_id).catch(error => {
+                                console.error('Error fetching additional position:', error);
+                                return { data: { success: false, response: { exists: false } } };
+                            }),
                             salaryCheck(userData.value.unique_id),
                             listTechCheck(userData.value.unique_id),
                             listCountrySalaryCheck(userData.value.unique_id),
