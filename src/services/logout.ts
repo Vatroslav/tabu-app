@@ -1,4 +1,4 @@
-import { logout } from './api'
+import { logout } from './auth'
 
 export const cleanupLocalStorage = () => {
   localStorage.removeItem('userData')
