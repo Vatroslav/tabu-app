@@ -2,6 +2,18 @@
 import { defineComponent } from 'vue'
 import Multiselect from 'vue-multiselect';
 
+interface TechOption {
+    tech: string;
+}
+
+interface CountrySalaryOption {
+    country_salary: string;
+}
+
+interface ContractTypeOption {
+    contract_type: string;
+}
+
 export default defineComponent({
     name: 'ResultsFilters',
     components: {
@@ -29,7 +41,7 @@ export default defineComponent({
             required: true
         },
         techOptions: {
-            type: Array,
+            type: Array as () => TechOption[],
             required: true
         },
         selectedTech: {
@@ -37,11 +49,11 @@ export default defineComponent({
             required: true
         },
         countrySalaryOptions: {
-            type: Array,
+            type: Array as () => CountrySalaryOption[],
             required: true
         },
         contracTypeOptions: {
-            type: Array,
+            type: Array as () => ContractTypeOption[],
             required: true
         }
     },
@@ -71,7 +83,7 @@ export default defineComponent({
 
         <div class="filter-row">
             <label for="position" class="filter-label">Position:</label>
-            <select id="position" class="input-field" :value="selectedPosition" @change="$emit('update:selectedPosition', $event.target.value)">
+            <select id="position" class="input-field" :value="selectedPosition" @change="$emit('update:selectedPosition', ($event.target as HTMLSelectElement).value)">
                 <option value="my_position" selected>
                     {{ submissionData.position }}</option>
                 <option value="other_positions_in_department">Other positions in {{
@@ -105,7 +117,7 @@ export default defineComponent({
         <div class="filter-row">
             <label for="technology" class="filter-label">Technology:</label>
             <select id="technology" class="input-field" :class="{ disabled: hasTechOptions === false }"
-                :disabled="hasTechOptions === false" :value="selectedTech" @change="$emit('update:selectedTech', $event.target.value)">
+                :disabled="hasTechOptions === false" :value="selectedTech" @change="$emit('update:selectedTech', ($event.target as HTMLSelectElement).value)">
                 <option v-if="hasTechOptions === false" value="no_technology">No technology
                 </option>
                 <option v-if="hasTechOptions === true" selected></option>
@@ -118,7 +130,7 @@ export default defineComponent({
         <div class="filter-row">
             <label for="country" class="filter-label">Country:</label>
             <select id="country" class="input-field" :value="submissionData.country_salary"
-                @change="$emit('update:countrySalary', $event.target.value)">
+                @change="$emit('update:countrySalary', ($event.target as HTMLSelectElement).value)">
                 <option v-for="country_salary in countrySalaryOptions" :key="country_salary.country_salary"
                     :value="country_salary.country_salary">{{
                         country_salary.country_salary }}
@@ -129,7 +141,7 @@ export default defineComponent({
         <div class="filter-row">
             <label for="contract" class="filter-label">Contract:</label>
             <select id="contract" class="input-field" :value="submissionData.contract_type"
-                @change="$emit('update:contractType', $event.target.value)">
+                @change="$emit('update:contractType', ($event.target as HTMLSelectElement).value)">
                 <option v-for="contract_type in contracTypeOptions" :key="contract_type.contract_type"
                     :value="contract_type.contract_type">{{
                         contract_type.contract_type }}
