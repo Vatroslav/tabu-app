@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption } from '@/types/results';
+import Multiselect from 'vue-multiselect'
 
 export interface DropdownOption {
     value: string;
@@ -9,6 +10,9 @@ export interface DropdownOption {
 
 export default defineComponent({
     name: 'ResultsFilters',
+    components: {
+        Multiselect
+    },
     props: {
         submissionData: {
             type: Object,
@@ -35,7 +39,7 @@ export default defineComponent({
             required: true
         },
         selectedTech: {
-            type: String,
+            type: Array as () => string[],
             required: true
         },
         countrySalaryOptions: {
@@ -108,12 +112,17 @@ export default defineComponent({
             }
         };
 
+        const handleTechUpdate = (value: any) => {
+            emit('update:selectedTech', value);
+        };
+
         return {
             toggleSeniority,
             positionOptions,
             techDropdownOptions,
             countryDropdownOptions,
-            contractDropdownOptions
+            contractDropdownOptions,
+            handleTechUpdate
         }
     }
 })
@@ -154,12 +163,18 @@ export default defineComponent({
 
         <div class="filter-row">
             <label for="technology" class="filter-label">Technology:</label>
-            <select id="technology" class="input-field" :class="{ disabled: !hasTechOptions }"
-                :disabled="!hasTechOptions" :value="selectedTech || 'no_technology'" @change="$emit('update:selectedTech', ($event.target as HTMLSelectElement).value)">
-                <option v-for="option in techDropdownOptions" :key="option.value" :value="option.value">
-                    {{ option.label }}
-                </option>
-            </select>
+            <Multiselect
+                :model-value="selectedTech"
+                :options="techDropdownOptions"
+                :multiple="true"
+                :disabled="!hasTechOptions"
+                :class="{ disabled: !hasTechOptions }"
+                :close-on-select="false"
+                placeholder="Select technologies"
+                @update:modelValue="handleTechUpdate"
+                track-by="value"
+                label="label"
+            />
         </div>
 
         <div class="filter-row">
@@ -321,6 +336,183 @@ export default defineComponent({
 
     .seniority-btn {
         font-size: 12px;
+    }
+}
+
+:deep(.multiselect) {
+    flex: 1;
+    width: 100%;
+    min-height: unset;
+}
+
+:deep(.multiselect__tags) {
+    border: none;
+    background-color: white;
+    padding: 8px;
+    min-height: unset;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+:deep(.multiselect__input) {
+    padding: 0;
+    margin: 0;
+    min-height: unset;
+    width: 100%;
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+:deep(.multiselect__placeholder) {
+    color: #6D6D6D;
+    padding: 0;
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+:deep(.multiselect__content-wrapper) {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+:deep(.multiselect__content) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+:deep(.multiselect__element) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+:deep(.multiselect__option) {
+    padding: 8px;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    list-style: none;
+}
+
+:deep(.multiselect__option--highlight) {
+    background: #D9FF80;
+    color: #333;
+}
+
+:deep(.multiselect__option--selected) {
+    background: #f0f0f0;
+    color: #333;
+    font-weight: 500;
+}
+
+:deep(.multiselect__option--selected.multiselect__option--highlight) {
+    background: #FF9883;
+    color: #333;
+}
+
+:deep(.multiselect__option--group) {
+    padding: 8px;
+    font-weight: 600;
+    background: #f8f8f8;
+    list-style: none;
+}
+
+:deep(.multiselect__option--group.multiselect__option--highlight) {
+    background: #f8f8f8;
+    color: #333;
+}
+
+:deep(.multiselect__option--group-selected.multiselect__option--highlight) {
+    background: #f8f8f8;
+    color: #333;
+}
+
+:deep(.multiselect__tags-wrap) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+:deep(.multiselect__tag) {
+    background: #D9FF80;
+    color: #333;
+    padding: 4px 8px;
+    margin: 0;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    max-width: calc(100% - 4px);
+}
+
+:deep(.multiselect__tag-icon) {
+    background: #c2e666;
+    border-radius: 3px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+:deep(.multiselect__tag-icon:after) {
+    color: #333;
+    font-size: 14px;
+    line-height: 1;
+    content: "×";
+}
+
+:deep(.multiselect__tag-icon:focus),
+:deep(.multiselect__tag-icon:hover) {
+    background: #b3d95c;
+}
+
+:deep(.multiselect__tag-icon:active) {
+    background: #a6cc52;
+}
+
+:deep(.multiselect__spinner) {
+    background: white;
+}
+
+@media (max-width: 768px) {
+    :deep(.multiselect__tags) {
+        padding: 4px;
+        min-height: 32px;
+    }
+
+    :deep(.multiselect__tag) {
+        padding: 2px 6px;
+        font-size: 12px;
+    }
+    
+    :deep(.multiselect__tag-icon) {
+        width: 16px;
+        height: 16px;
+    }
+    
+    :deep(.multiselect__tag-icon:after) {
+        font-size: 12px;
+    }
+
+    :deep(.multiselect__option) {
+        font-size: 12px;
+        padding: 6px;
     }
 }
 </style> 
