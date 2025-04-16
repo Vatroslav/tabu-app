@@ -2,6 +2,11 @@
 import { defineComponent, computed } from 'vue'
 import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption } from '@/types/results';
 
+export interface DropdownOption {
+    value: string;
+    label: string;
+}
+
 export default defineComponent({
     name: 'ResultsFilters',
     props: {
@@ -67,6 +72,31 @@ export default defineComponent({
             return options;
         });
 
+        const techDropdownOptions = computed<DropdownOption[]>(() => {
+            if (!props.hasTechOptions) {
+                return [{ value: 'no_technology', label: 'No technology' }];
+            }
+
+            return props.techOptions.map(tech => ({
+                value: tech.tech,
+                label: tech.tech
+            }));
+        });
+
+        const countryDropdownOptions = computed<DropdownOption[]>(() => {
+            return props.countrySalaryOptions.map(country => ({
+                value: country.country_salary,
+                label: country.country_salary
+            }));
+        });
+
+        const contractDropdownOptions = computed<DropdownOption[]>(() => {
+            return props.contracTypeOptions.map(contract => ({
+                value: contract.contract_type,
+                label: contract.contract_type
+            }));
+        });
+
         const toggleSeniority = (seniority: string) => {
             const index = props.selectedSeniorities.indexOf(seniority);
             if (index === -1) {
@@ -80,7 +110,10 @@ export default defineComponent({
 
         return {
             toggleSeniority,
-            positionOptions
+            positionOptions,
+            techDropdownOptions,
+            countryDropdownOptions,
+            contractDropdownOptions
         }
     }
 })
@@ -121,13 +154,10 @@ export default defineComponent({
 
         <div class="filter-row">
             <label for="technology" class="filter-label">Technology:</label>
-            <select id="technology" class="input-field" :class="{ disabled: hasTechOptions === false }"
-                :disabled="hasTechOptions === false" :value="selectedTech" @change="$emit('update:selectedTech', ($event.target as HTMLSelectElement).value)">
-                <option v-if="hasTechOptions === false" value="no_technology">No technology
-                </option>
-                <option v-if="hasTechOptions === true" selected></option>
-                <option v-if="hasTechOptions === true" v-for="tech in techOptions" :key="tech.tech"
-                    :value="tech.tech">{{ tech.tech }}
+            <select id="technology" class="input-field" :class="{ disabled: !hasTechOptions }"
+                :disabled="!hasTechOptions" :value="selectedTech || 'no_technology'" @change="$emit('update:selectedTech', ($event.target as HTMLSelectElement).value)">
+                <option v-for="option in techDropdownOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
                 </option>
             </select>
         </div>
@@ -136,9 +166,8 @@ export default defineComponent({
             <label for="country" class="filter-label">Country:</label>
             <select id="country" class="input-field" :value="submissionData.country_salary"
                 @change="$emit('update:countrySalary', ($event.target as HTMLSelectElement).value)">
-                <option v-for="country_salary in countrySalaryOptions" :key="country_salary.country_salary"
-                    :value="country_salary.country_salary">{{
-                        country_salary.country_salary }}
+                <option v-for="option in countryDropdownOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
                 </option>
             </select>
         </div>
@@ -147,9 +176,8 @@ export default defineComponent({
             <label for="contract" class="filter-label">Contract:</label>
             <select id="contract" class="input-field" :value="submissionData.contract_type"
                 @change="$emit('update:contractType', ($event.target as HTMLSelectElement).value)">
-                <option v-for="contract_type in contracTypeOptions" :key="contract_type.contract_type"
-                    :value="contract_type.contract_type">{{
-                        contract_type.contract_type }}
+                <option v-for="option in contractDropdownOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
                 </option>
             </select>
         </div>
