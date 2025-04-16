@@ -57,7 +57,7 @@ export default defineComponent({
                 },
                 {
                     value: 'other_positions_in_department',
-                    label: `Other positions in ${props.submissionData.position_group}`
+                    label: `All positions in ${props.submissionData.position_group}`
                 }
             ];
 
