@@ -11,4 +11,10 @@ export interface CountrySalaryOption {
 export interface ContractTypeOption {
     contract_type: string;
     amount: number;
+}
+
+export interface PositionOption {
+    value: string;
+    label: string;
+    isAdditional?: boolean;
 } 

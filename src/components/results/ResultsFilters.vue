@@ -1,6 +1,6 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import type { TechOption, CountrySalaryOption, ContractTypeOption } from '@/types/results';
+import { defineComponent, computed } from 'vue'
+import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption } from '@/types/results';
 
 export default defineComponent({
     name: 'ResultsFilters',
@@ -44,6 +44,29 @@ export default defineComponent({
     },
     emits: ['update:selectedPosition', 'update:selectedSeniorities', 'update:selectedTech', 'update:countrySalary', 'update:contractType'],
     setup(props, { emit }) {
+        const positionOptions = computed<PositionOption[]>(() => {
+            const options: PositionOption[] = [
+                {
+                    value: 'my_position',
+                    label: props.submissionData.position
+                },
+                {
+                    value: 'other_positions_in_department',
+                    label: `Other positions in ${props.submissionData.position_group}`
+                }
+            ];
+
+            if (props.additionalPositionData.additional_position) {
+                options.push({
+                    value: 'additional_position',
+                    label: `Additional position: ${props.additionalPositionData.additional_position}`,
+                    isAdditional: true
+                });
+            }
+
+            return options;
+        });
+
         const toggleSeniority = (seniority: string) => {
             const index = props.selectedSeniorities.indexOf(seniority);
             if (index === -1) {
@@ -56,7 +79,8 @@ export default defineComponent({
         };
 
         return {
-            toggleSeniority
+            toggleSeniority,
+            positionOptions
         }
     }
 })
@@ -69,12 +93,8 @@ export default defineComponent({
         <div class="filter-row">
             <label for="position" class="filter-label">Position:</label>
             <select id="position" class="input-field" :value="selectedPosition" @change="$emit('update:selectedPosition', ($event.target as HTMLSelectElement).value)">
-                <option value="my_position" selected>
-                    {{ submissionData.position }}</option>
-                <option value="other_positions_in_department">Other positions in {{
-                    submissionData.position_group }}</option>
-                <option v-if="additionalPositionData.additional_position" value="additional_position">
-                    Additional position: {{ additionalPositionData.additional_position }}
+                <option v-for="option in positionOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
                 </option>
             </select>
         </div>
