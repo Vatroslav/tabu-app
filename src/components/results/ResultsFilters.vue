@@ -1,24 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Multiselect from 'vue-multiselect';
-
-interface TechOption {
-    tech: string;
-}
-
-interface CountrySalaryOption {
-    country_salary: string;
-}
-
-interface ContractTypeOption {
-    contract_type: string;
-}
+import type { TechOption, CountrySalaryOption, ContractTypeOption } from '@/types/results';
 
 export default defineComponent({
     name: 'ResultsFilters',
-    components: {
-        Multiselect
-    },
     props: {
         submissionData: {
             type: Object,

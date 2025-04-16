@@ -18,6 +18,7 @@ import axios from 'axios';
 import ResultsFilters from '@/components/results/ResultsFilters.vue';
 import ResultsSalaryAmount from '@/components/results/ResultsSalaryAmount.vue';
 import ResultsSalaryComparison from '@/components/results/ResultsSalaryComparison.vue';
+import type { TechOption, CountrySalaryOption, ContractTypeOption } from '@/types/results';
 
 type UserData = {
     name: string,
@@ -50,10 +51,10 @@ export default defineComponent({
         const selectedPosition = ref<string>('');
         const selectedSeniorities = ref<string[]>([]);
         const hasTechOptions = ref(false);
-        const techOptions = ref<{ tech: string; amount: number }[]>([]);
+        const techOptions = ref<TechOption[]>([]);
         const selectedTech = ref<string>('');
-        const countrySalaryOptions = ref<{ country_salary: string; amount: number }[]>([]);
-        const contracTypeOptions = ref<{ contract_type: string; amount: number }[]>([]);
+        const countrySalaryOptions = ref<CountrySalaryOption[]>([]);
+        const contracTypeOptions = ref<ContractTypeOption[]>([]);
         const salaryData = ref({
             salary_net: 0,
             salary_gross: 0,
