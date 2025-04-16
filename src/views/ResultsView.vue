@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { computed } from 'vue'
 import router from '@/router'
 import { handleLogout } from '@/services/logout'
@@ -312,6 +312,19 @@ export default defineComponent({
                 }
             }
         })
+
+        // Add watchers for filter changes
+        watch([selectedPosition, selectedSeniorities, selectedTech], () => {
+            updateDataAmount();
+        });
+
+        watch(() => submissionData.value.country_salary, () => {
+            updateDataAmount();
+        });
+
+        watch(() => submissionData.value.contract_type, () => {
+            updateDataAmount();
+        });
 
         return {
             userData,
