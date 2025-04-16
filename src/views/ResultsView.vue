@@ -52,7 +52,7 @@ export default defineComponent({
         const selectedSeniorities = ref<string[]>([]);
         const hasTechOptions = ref(false);
         const techOptions = ref<TechOption[]>([]);
-        const selectedTech = ref<string>('');
+        const selectedTech = ref<string[]>([]);
         const countrySalaryOptions = ref<CountrySalaryOption[]>([]);
         const contracTypeOptions = ref<ContractTypeOption[]>([]);
         const salaryData = ref({
@@ -208,7 +208,9 @@ export default defineComponent({
                     ? selectedSeniorities.value.join('|')
                     : "N/A";
 
-                const chosenTech = selectedTech.value || null;
+                const chosenTech = selectedTech.value.length
+                    ? selectedTech.value.join('|')
+                    : null;
 
                 const chosenCountrySalary = submissionData.value.country_salary;
 
