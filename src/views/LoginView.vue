@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
 import Login from '@/components/LoginItem.vue';
+import VersionDisplay from '../components/VersionDisplay.vue';
 
 const disableScroll = () => {
   document.body.style.overflow = 'hidden';
@@ -20,7 +21,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main>
-    <Login />
-  </main>
+  <div class="login-container">
+    <main>
+      <Login />
+    </main>
+    <VersionDisplay position="bottom" show-label />
+  </div>
 </template>
+
+<style scoped>
+.login-container {
+  position: relative;
+  min-height: 100vh;
+}
+</style>

@@ -19,6 +19,7 @@ import ResultsFilters from '@/components/results/ResultsFilters.vue';
 import ResultsSalaryAmount from '@/components/results/ResultsSalaryAmount.vue';
 import ResultsSalaryComparison from '@/components/results/ResultsSalaryComparison.vue';
 import type { TechOption, CountrySalaryOption, ContractTypeOption } from '@/types/results';
+import VersionDisplay from '../components/VersionDisplay.vue';
 
 type UserData = {
     name: string,
@@ -31,7 +32,8 @@ export default defineComponent({
         NavbarItem,
         ResultsFilters,
         ResultsSalaryAmount,
-        ResultsSalaryComparison
+        ResultsSalaryComparison,
+        VersionDisplay
     },
     setup() {
         const userData = ref<UserData>({ name: '', unique_id: '' });
@@ -418,6 +420,7 @@ export default defineComponent({
                 :diff-user-to-average-display="diffUserToAverageDisplay"
                 :diff-user-to-median-display="diffUserToMedianDisplay"
             />
+            <VersionDisplay position="bottom" show-label />
         </div>
     </div>
 </template>
