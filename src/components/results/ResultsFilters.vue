@@ -70,11 +70,11 @@ export default defineComponent({
             const options: PositionOption[] = [
                 {
                     value: 'my_position',
-                    label: props.submissionData.position
+                    label: `My position: ${props.submissionData.position}`
                 },
                 {
                     value: 'other_positions_in_department',
-                    label: `All positions in ${props.submissionData.position_group}`
+                    label: `All positions in: ${props.submissionData.position_group}`
                 }
             ];
 
@@ -364,6 +364,7 @@ export default defineComponent({
 
     .filter-row .input-field {
         min-width: 300px;
+        font-size: 18px;
     }
 
     .seniority-btn {
