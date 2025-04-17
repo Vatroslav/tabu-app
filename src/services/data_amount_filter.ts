@@ -28,14 +28,27 @@ async function dataAmountFilterCheck(
             },
         })
     } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.status === 404) {
-            //console.log('Got 404, returning fallback instead of throwing.')
-            return {
-                data: {
-                    success: false,
-                    message: 'Not enough data for the filter',
-                    response: {
-                        exists: false
+        if (axios.isAxiosError(error)) {
+            if (error.response?.status === 404) {
+                return {
+                    data: {
+                        success: false,
+                        message: 'Not enough data for the filter',
+                        response: {
+                            exists: false
+                        }
+                    }
+                }
+            }
+            if (error.response?.status === 500 && 
+                error.response?.data?.message === 'No data found for the provided filters') {
+                return {
+                    data: {
+                        success: false,
+                        message: 'No data found for the provided filters',
+                        response: {
+                            exists: false
+                        }
                     }
                 }
             }
