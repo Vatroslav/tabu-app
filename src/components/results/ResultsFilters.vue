@@ -169,12 +169,15 @@ export default defineComponent({
                 :multiple="true"
                 :disabled="!hasTechOptions"
                 :class="{ disabled: !hasTechOptions }"
-                :close-on-select="false"
-                placeholder="Select technologies"
+                :placeholder="hasTechOptions ? 'Select technologies' : 'No technology'"
                 @update:modelValue="handleTechUpdate"
                 track-by="value"
                 label="label"
-            />
+            >
+                <template #noResult>
+                    No such technology for the selected position(s).
+                </template>
+            </Multiselect>
         </div>
 
         <div class="filter-row">
@@ -337,12 +340,99 @@ export default defineComponent({
     .seniority-btn {
         font-size: 12px;
     }
+
+    :deep(.multiselect) {
+        font-size: 12px;
+    }
+
+    :deep(.multiselect__tags) {
+        padding: 4px;
+        min-height: 24px;
+    }
+
+    :deep(.multiselect__tag) {
+        padding: 2px 6px;
+        font-size: 12px;
+    }
+    
+    :deep(.multiselect__tag-icon) {
+        width: 16px;
+        height: 16px;
+    }
+    
+    :deep(.multiselect__tag-icon:after) {
+        font-size: 12px;
+    }
+
+    :deep(.multiselect__option) {
+        font-size: 12px !important;
+        padding: 6px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    :deep(.multiselect__placeholder) {
+        font-size: 12px;
+    }
+
+    :deep(.multiselect__input) {
+        font-size: 12px;
+    }
+
+    :deep(.multiselect__input::placeholder) {
+        font-size: 12px;
+    }
+
+    :deep(.multiselect__content-wrapper) {
+        font-size: 12px;
+        width: 100%;
+    }
+
+    :deep(.multiselect__content) {
+        font-size: 12px;
+        width: 100%;
+    }
+
+    :deep(.multiselect__element) {
+        font-size: 12px;
+        width: 100%;
+    }
 }
 
 :deep(.multiselect) {
     flex: 1;
     width: 100%;
     min-height: unset;
+    font-weight: 400;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:deep(.multiselect:focus) {
+    outline: none;
+    box-shadow: none;
+}
+
+:deep(.multiselect__tags:focus) {
+    outline: none;
+    box-shadow: none;
+}
+
+:deep(.multiselect__input:focus) {
+    outline: none;
+    box-shadow: none;
+}
+
+:deep(.multiselect__content-wrapper) {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+:deep(.multiselect__content-wrapper:focus) {
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 :deep(.multiselect__tags) {
@@ -353,6 +443,8 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 4px;
+    font-weight: 400;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 :deep(.multiselect__input) {
@@ -364,7 +456,14 @@ export default defineComponent({
     border: none;
     background: transparent;
     font-size: inherit;
-    line-height: inherit;
+    font-weight: 400;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:deep(.multiselect__input::placeholder) {
+    color: #6D6D6D;
+    font-weight: 400;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 :deep(.multiselect__placeholder) {
@@ -372,38 +471,36 @@ export default defineComponent({
     padding: 0;
     margin: 0;
     font-size: inherit;
-    line-height: inherit;
-}
-
-:deep(.multiselect__content-wrapper) {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-height: 300px;
-    overflow-y: auto;
+    font-weight: 400;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 :deep(.multiselect__content) {
     list-style: none;
     padding: 0;
     margin: 0;
+    width: 100%;
 }
 
 :deep(.multiselect__element) {
     list-style: none;
     padding: 0;
     margin: 0;
+    width: 100%;
 }
 
 :deep(.multiselect__option) {
     padding: 8px;
     font-size: 16px;
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
     cursor: pointer;
     transition: background-color 0.2s;
     list-style: none;
+    font-weight: 400;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 :deep(.multiselect__option--highlight) {
@@ -455,6 +552,8 @@ export default defineComponent({
     display: flex;
     align-items: center;
     max-width: calc(100% - 4px);
+    font-weight: 400;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 :deep(.multiselect__tag-icon) {
@@ -488,31 +587,29 @@ export default defineComponent({
 
 :deep(.multiselect__spinner) {
     background: white;
+    height: 24px;
+    line-height: 24px;
 }
 
-@media (max-width: 768px) {
-    :deep(.multiselect__tags) {
-        padding: 4px;
-        min-height: 32px;
-    }
+:deep(.multiselect.disabled) {
+    background-color: #f5F7EE;
+    color: #969694;
+    box-shadow: inset 0 0 0 1px #969694;
+    border-radius: 3px;
+    cursor: not-allowed;
+}
 
-    :deep(.multiselect__tag) {
-        padding: 2px 6px;
-        font-size: 12px;
-    }
-    
-    :deep(.multiselect__tag-icon) {
-        width: 16px;
-        height: 16px;
-    }
-    
-    :deep(.multiselect__tag-icon:after) {
-        font-size: 12px;
-    }
+:deep(.multiselect.disabled .multiselect__tags) {
+    background-color: #f5F7EE;
+    box-shadow: inset 0 0 0 1px #969694;
+    border-radius: 3px;
+}
 
-    :deep(.multiselect__option) {
-        font-size: 12px;
-        padding: 6px;
-    }
+:deep(.multiselect.disabled .multiselect__placeholder) {
+    color: #969694;
+}
+
+:deep(.multiselect.disabled .multiselect__input) {
+    color: #969694;
 }
 </style> 
