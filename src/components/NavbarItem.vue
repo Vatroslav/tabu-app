@@ -57,7 +57,7 @@ nav {
     }
 
     .small-logo-app {
-        padding: 25px;
+        padding: 20px;
     }
 
     .logout-button {
@@ -72,7 +72,7 @@ nav {
     }
 
     .small-logo-app {
-        padding: 82px;
+        padding: 20px;
     }
 
     .logout-button {
