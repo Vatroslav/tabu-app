@@ -1,9 +1,14 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption, CountryMultiselectOption } from '@/types/results';
+import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption } from '@/types/results';
 import Multiselect from 'vue-multiselect'
 
 export interface DropdownOption {
+    value: string;
+    label: string;
+}
+
+export interface CountryMultiselectOption {
     value: string;
     label: string;
 }
@@ -124,6 +129,10 @@ export default defineComponent({
             emit('update:selectedCountries', value.map((item: any) => item.value));
         };
 
+        const showCountryWarning = computed(() => {
+            return props.selectedCountries.length === 0;
+        });
+
         return {
             toggleSeniority,
             positionOptions,
@@ -131,7 +140,8 @@ export default defineComponent({
             countryMultiselectOptions,
             contractDropdownOptions,
             handleTechUpdate,
-            handleCountriesUpdate
+            handleCountriesUpdate,
+            showCountryWarning
         }
     }
 })
@@ -191,19 +201,22 @@ export default defineComponent({
 
         <div class="filter-row">
             <label for="countries" class="filter-label">Countries:</label>
-            <Multiselect
-                :model-value="selectedCountries.map(country => ({ value: country, label: country }))"
-                :options="countryMultiselectOptions"
-                :multiple="true"
-                :placeholder="'Select countries'"
-                @update:modelValue="handleCountriesUpdate"
-                track-by="value"
-                label="label"
-            >
-                <template #noResult>
-                    No countries found.
-                </template>
-            </Multiselect>
+            <div class="countries-container">
+                <Multiselect
+                    :model-value="selectedCountries.map(country => ({ value: country, label: country }))"
+                    :options="countryMultiselectOptions"
+                    :multiple="true"
+                    :placeholder="'Select countries'"
+                    @update:modelValue="handleCountriesUpdate"
+                    track-by="value"
+                    label="label"
+                >
+                    <template #noResult>
+                        No countries found.
+                    </template>
+                </Multiselect>
+                <p v-if="selectedCountries.length === 0" class="warning-message">At least one country is required.</p>
+            </div>
         </div>
 
         <div class="filter-row">
@@ -226,7 +239,7 @@ export default defineComponent({
 
 .filter-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     margin-top: 10px;
     font-weight: 500;
 }
@@ -629,5 +642,19 @@ export default defineComponent({
 
 :deep(.multiselect.disabled .multiselect__input) {
     color: #969694;
+}
+
+.countries-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.warning-message {
+    color: #FF9883;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 0 0 8px;
 }
 </style> 
