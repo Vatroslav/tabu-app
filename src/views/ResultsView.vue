@@ -54,6 +54,7 @@ export default defineComponent({
         const techOptions = ref<TechOption[]>([]);
         const selectedTech = ref<string[]>([]);
         const countrySalaryOptions = ref<CountrySalaryOption[]>([]);
+        const selectedCountries = ref<string[]>([]);
         const contracTypeOptions = ref<ContractTypeOption[]>([]);
         const salaryData = ref({
             salary_net: 0,
@@ -212,7 +213,9 @@ export default defineComponent({
                     ? selectedTech.value.join('|')
                     : null;
 
-                const chosenCountrySalary = submissionData.value.country_salary;
+                const chosenCountrySalary = selectedCountries.value.length
+                    ? selectedCountries.value.join('|')
+                    : null;
 
                 const chosenContractType = submissionData.value.contract_type;
 
@@ -256,6 +259,10 @@ export default defineComponent({
 
                         if (submissionData.value.seniority !== 'N/A') {
                             selectedSeniorities.value = [submissionData.value.seniority];
+                        }
+
+                        if (submissionData.value.country_salary) {
+                            selectedCountries.value = [submissionData.value.country_salary];
                         }
 
                         const [
@@ -320,7 +327,7 @@ export default defineComponent({
             updateDataAmount();
         });
 
-        watch(() => submissionData.value.country_salary, () => {
+        watch(selectedCountries, () => {
             updateDataAmount();
         });
 
@@ -337,6 +344,7 @@ export default defineComponent({
             techOptions,
             selectedTech,
             countrySalaryOptions,
+            selectedCountries,
             contracTypeOptions,
             dataAmount,
             salaryAverage_net,
@@ -373,11 +381,13 @@ export default defineComponent({
                     :tech-options="techOptions"
                     :selected-tech="selectedTech"
                     :country-salary-options="countrySalaryOptions"
+                    :selected-countries="selectedCountries"
                     :contrac-type-options="contracTypeOptions"
                     @update:selectedPosition="selectedPosition = $event"
                     @update:selectedSeniorities="selectedSeniorities = $event"
                     @update:selectedTech="selectedTech = $event"
                     @update:countrySalary="submissionData.country_salary = $event"
+                    @update:selectedCountries="selectedCountries = $event"
                     @update:contractType="submissionData.contract_type = $event"
                 />
                 <ResultsSalaryAmount :data-amount="dataAmount" />

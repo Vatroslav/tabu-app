@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption } from '@/types/results';
+import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption, CountryMultiselectOption } from '@/types/results';
 import Multiselect from 'vue-multiselect'
 
 export interface DropdownOption {
@@ -46,12 +46,16 @@ export default defineComponent({
             type: Array as () => CountrySalaryOption[],
             required: true
         },
+        selectedCountries: {
+            type: Array as () => string[],
+            required: true
+        },
         contracTypeOptions: {
             type: Array as () => ContractTypeOption[],
             required: true
         }
     },
-    emits: ['update:selectedPosition', 'update:selectedSeniorities', 'update:selectedTech', 'update:countrySalary', 'update:contractType'],
+    emits: ['update:selectedPosition', 'update:selectedSeniorities', 'update:selectedTech', 'update:countrySalary', 'update:contractType', 'update:selectedCountries'],
     setup(props, { emit }) {
         const positionOptions = computed<PositionOption[]>(() => {
             const options: PositionOption[] = [
@@ -87,7 +91,7 @@ export default defineComponent({
             }));
         });
 
-        const countryDropdownOptions = computed<DropdownOption[]>(() => {
+        const countryMultiselectOptions = computed<CountryMultiselectOption[]>(() => {
             return props.countrySalaryOptions.map(country => ({
                 value: country.country_salary,
                 label: country.country_salary
@@ -116,13 +120,18 @@ export default defineComponent({
             emit('update:selectedTech', value);
         };
 
+        const handleCountriesUpdate = (value: any) => {
+            emit('update:selectedCountries', value.map((item: any) => item.value));
+        };
+
         return {
             toggleSeniority,
             positionOptions,
             techDropdownOptions,
-            countryDropdownOptions,
+            countryMultiselectOptions,
             contractDropdownOptions,
-            handleTechUpdate
+            handleTechUpdate,
+            handleCountriesUpdate
         }
     }
 })
@@ -181,13 +190,20 @@ export default defineComponent({
         </div>
 
         <div class="filter-row">
-            <label for="country" class="filter-label">Country:</label>
-            <select id="country" class="input-field" :value="submissionData.country_salary"
-                @change="$emit('update:countrySalary', ($event.target as HTMLSelectElement).value)">
-                <option v-for="option in countryDropdownOptions" :key="option.value" :value="option.value">
-                    {{ option.label }}
-                </option>
-            </select>
+            <label for="countries" class="filter-label">Countries:</label>
+            <Multiselect
+                :model-value="selectedCountries.map(country => ({ value: country, label: country }))"
+                :options="countryMultiselectOptions"
+                :multiple="true"
+                :placeholder="'Select countries'"
+                @update:modelValue="handleCountriesUpdate"
+                track-by="value"
+                label="label"
+            >
+                <template #noResult>
+                    No countries found.
+                </template>
+            </Multiselect>
         </div>
 
         <div class="filter-row">
