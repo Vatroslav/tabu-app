@@ -55,12 +55,16 @@ export default defineComponent({
             type: Array as () => string[],
             required: true
         },
+        selectedContractTypes: {
+            type: Array as () => string[],
+            required: true
+        },
         contracTypeOptions: {
             type: Array as () => ContractTypeOption[],
             required: true
         }
     },
-    emits: ['update:selectedPosition', 'update:selectedSeniorities', 'update:selectedTech', 'update:countrySalary', 'update:contractType', 'update:selectedCountries'],
+    emits: ['update:selectedPosition', 'update:selectedSeniorities', 'update:selectedTech', 'update:countrySalary', 'update:contractType', 'update:selectedCountries', 'update:selectedContractTypes'],
     setup(props, { emit }) {
         const positionOptions = computed<PositionOption[]>(() => {
             const options: PositionOption[] = [
@@ -129,8 +133,16 @@ export default defineComponent({
             emit('update:selectedCountries', value.map((item: any) => item.value));
         };
 
+        const handleContractTypesUpdate = (value: any) => {
+            emit('update:selectedContractTypes', value.map((item: any) => item.value));
+        };
+
         const showCountryWarning = computed(() => {
             return props.selectedCountries.length === 0;
+        });
+
+        const showContractWarning = computed(() => {
+            return props.selectedContractTypes.length === 0;
         });
 
         return {
@@ -141,7 +153,9 @@ export default defineComponent({
             contractDropdownOptions,
             handleTechUpdate,
             handleCountriesUpdate,
-            showCountryWarning
+            handleContractTypesUpdate,
+            showCountryWarning,
+            showContractWarning
         }
     }
 })
@@ -221,12 +235,22 @@ export default defineComponent({
 
         <div class="filter-row">
             <label for="contract" class="filter-label">Contract:</label>
-            <select id="contract" class="input-field" :value="submissionData.contract_type"
-                @change="$emit('update:contractType', ($event.target as HTMLSelectElement).value)">
-                <option v-for="option in contractDropdownOptions" :key="option.value" :value="option.value">
-                    {{ option.label }}
-                </option>
-            </select>
+            <div class="contract-container">
+                <Multiselect
+                    :model-value="selectedContractTypes.map(contract => ({ value: contract, label: contract }))"
+                    :options="contractDropdownOptions"
+                    :multiple="true"
+                    :placeholder="'Select contract types'"
+                    @update:modelValue="handleContractTypesUpdate"
+                    track-by="value"
+                    label="label"
+                >
+                    <template #noResult>
+                        No contract types found.
+                    </template>
+                </Multiselect>
+                <p v-if="selectedContractTypes.length === 0" class="warning-message">At least one contract type is required.</p>
+            </div>
         </div>
     </div>
 </template>
@@ -247,6 +271,7 @@ export default defineComponent({
 .filter-row label {
     padding: 8px;
     margin-top: 0px;
+    width: 120px;
 }
 
 .filter-row .input-field {
@@ -338,11 +363,15 @@ export default defineComponent({
     }
 
     .filter-row .input-field {
-        font-size: 18px;
+        min-width: 300px;
     }
 
     .seniority-btn {
         font-size: 18px;
+    }
+
+    :deep(.multiselect) {
+        min-width: 300px;
     }
 }
 
@@ -365,7 +394,7 @@ export default defineComponent({
     }
 
     .filter-row .input-field {
-        font-size: 12px;
+        min-width: 200px;
     }
 
     .seniority-btn {
@@ -373,7 +402,7 @@ export default defineComponent({
     }
 
     :deep(.multiselect) {
-        font-size: 12px;
+        min-width: 200px;
     }
 
     :deep(.multiselect__tags) {
@@ -428,6 +457,18 @@ export default defineComponent({
         font-size: 12px;
         width: 100%;
     }
+}
+
+.countries-container, .contract-container {
+    flex: 1;
+    width: 100%;
+}
+
+.warning-message {
+    color: #FF9883;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 0 0 8px;
 }
 
 :deep(.multiselect) {
@@ -642,19 +683,5 @@ export default defineComponent({
 
 :deep(.multiselect.disabled .multiselect__input) {
     color: #969694;
-}
-
-.countries-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.warning-message {
-    color: #FF9883;
-    font-size: 12px;
-    margin: 0;
-    padding: 0 0 0 8px;
 }
 </style> 

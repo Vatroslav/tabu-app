@@ -56,6 +56,7 @@ export default defineComponent({
         const countrySalaryOptions = ref<CountrySalaryOption[]>([]);
         const selectedCountries = ref<string[]>([]);
         const contracTypeOptions = ref<ContractTypeOption[]>([]);
+        const selectedContractTypes = ref<string[]>([]);
         const salaryData = ref({
             salary_net: 0,
             salary_gross: 0,
@@ -217,7 +218,9 @@ export default defineComponent({
                     ? selectedCountries.value.join('|')
                     : null;
 
-                const chosenContractType = submissionData.value.contract_type;
+                const chosenContractType = selectedContractTypes.value.length
+                    ? selectedContractTypes.value.join('|')
+                    : null;
 
                 const api_response = await dataAmountFilterCheck(
                     chosenDepartment,
@@ -306,6 +309,9 @@ export default defineComponent({
 
                         if (listContractTypeResponse.data.success && listContractTypeResponse.data.data) {
                             contracTypeOptions.value = listContractTypeResponse.data.data;
+                            if (submissionData.value.contract_type) {
+                                selectedContractTypes.value = [submissionData.value.contract_type];
+                            }
                         }
 
                         updateDataAmount();
@@ -331,6 +337,10 @@ export default defineComponent({
             updateDataAmount();
         });
 
+        watch(selectedContractTypes, () => {
+            updateDataAmount();
+        });
+
         watch(() => submissionData.value.contract_type, () => {
             updateDataAmount();
         });
@@ -345,6 +355,7 @@ export default defineComponent({
             selectedTech,
             countrySalaryOptions,
             selectedCountries,
+            selectedContractTypes,
             contracTypeOptions,
             dataAmount,
             salaryAverage_net,
@@ -382,6 +393,7 @@ export default defineComponent({
                     :selected-tech="selectedTech"
                     :country-salary-options="countrySalaryOptions"
                     :selected-countries="selectedCountries"
+                    :selected-contract-types="selectedContractTypes"
                     :contrac-type-options="contracTypeOptions"
                     @update:selectedPosition="selectedPosition = $event"
                     @update:selectedSeniorities="selectedSeniorities = $event"
@@ -389,6 +401,7 @@ export default defineComponent({
                     @update:countrySalary="submissionData.country_salary = $event"
                     @update:selectedCountries="selectedCountries = $event"
                     @update:contractType="submissionData.contract_type = $event"
+                    @update:selectedContractTypes="selectedContractTypes = $event"
                 />
                 <ResultsSalaryAmount :data-amount="dataAmount" />
             </div>
