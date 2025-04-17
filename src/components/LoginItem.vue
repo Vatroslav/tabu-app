@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <img src="/tabu_small_logo_login.webp" alt="Tabu Small Logo" class="small-logo-login" />
+    <img src="/tabu_small_logo_black.svg" alt="Tabu Small Logo" class="small-logo-login" />
     <h1>Login to your Tabu account</h1>
     <GoogleLogin :buttonConfig="buttonConfig" :callback="callback" prompt auto-login />
     <div v-if="showRegister" class="register">

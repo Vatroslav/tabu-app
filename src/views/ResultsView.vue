@@ -242,6 +242,9 @@ export default defineComponent({
                 }
             } catch (error) {
                 console.error(error);
+                dataAmount.value = 0;
+                salaryAverage_net.value = 0;
+                salaryMedian_net.value = 0;
             }
         };
 
