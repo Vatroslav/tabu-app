@@ -383,7 +383,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <div>
+    <div class="page-container">
         <NavbarItem />
         <div class="results">
             <h1>My salary comparison</h1>
@@ -420,16 +420,33 @@ export default defineComponent({
                 :diff-user-to-average-display="diffUserToAverageDisplay"
                 :diff-user-to-median-display="diffUserToMedianDisplay"
             />
-            <VersionDisplay position="bottom" show-label />
+            <div class="version-display-container">
+                <VersionDisplay position="bottom" show-label />
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .results {
     margin-top: 97px;
     text-align: left;
     padding-left: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 60px;
+}
+
+.version-display-container {
+    margin-top: 50px;
 }
 
 h1 {
