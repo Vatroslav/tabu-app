@@ -226,6 +226,7 @@ export default defineComponent({
     padding: 8px;
     border: none;
     background-color: white;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .filters-title {
@@ -268,6 +269,7 @@ export default defineComponent({
     border-radius: 3px;
     background-color: white;
     cursor: pointer;
+    font-family: Matter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .seniority-btn:nth-child(2) {
