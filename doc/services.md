@@ -4,9 +4,11 @@ The project includes several service files organized in the `src/services` direc
 
 ## Key Services
 
-- **api.ts**: Contains API service functions.
-- **types.ts**: Contains TypeScript types used across the services.
-- **auth/**: Directory for authentication-related services.
+- **api.ts**: API client configuration with authentication and error handling
+- **types.ts**: TypeScript type definitions for API responses
+- **auth/**: Directory for authentication-related services
+  - **index.ts**: Core authentication functions
+  - **google.ts**: Google authentication integration
 
 ## Service Structure
 
@@ -14,71 +16,151 @@ The project includes several service files organized in the `src/services` direc
 
 ```typescript
 import axios from 'axios'
+import { setTokens, logout } from './auth'
 
-const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_ENDPOINT,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+const createApiInstance = () => {
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_API_ENDPOINT,
+    timeout: 2000,
+    headers: { 'X-Custom-Header': 'foobar' },
+  })
 
-export const fetchData = async () => {
-  try {
-    const response = await apiClient.get('/data')
-    return response.data
-  } catch (error) {
-    throw new Error('Failed to fetch data')
-  }
+  // Request interceptor for adding auth token
+  instance.interceptors.request.use(
+    config => {
+      const accessToken = localStorage.getItem('accessToken')
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`
+      }
+      return config
+    },
+    error => Promise.reject(error)
+  )
+
+  // Response interceptor for handling tokens and errors
+  instance.interceptors.response.use(
+    response => {
+      if (response.data.tokens) {
+        setTokens(response.data.tokens.accessToken, response.data.tokens.refreshToken)
+      }
+      return response
+    },
+    async error => {
+      // Handle token refresh on 401 errors
+      if (error.response.status === 401 && !error.config._retry) {
+        // ... token refresh logic
+      }
+      return Promise.reject(error)
+    }
+  )
+
+  return instance
 }
 
-// Other API service functions
+const apiInstance = createApiInstance()
+export default apiInstance
 ```
 
 ### types.ts
 
 ```typescript
-export interface ApiResponse {
-  data: any
-  status: number
-  statusText: string
+export type APIResponse<T> = {
+  success: boolean
+  content: T
+  status?: number
+}
+```
+
+### auth/index.ts
+
+```typescript
+import axios from 'axios'
+import router from '@/router'
+
+export const setTokens = (newAccessToken: string, newRefreshToken: string) => {
+  localStorage.setItem('accessToken', newAccessToken)
+  localStorage.setItem('refreshToken', newRefreshToken)
 }
 
-export interface AuthResponse {
-  token: string
-  user: {
-    id: string
-    name: string
-    email: string
-  }
+export const logout = async () => {
+  const refreshToken = localStorage.getItem('refreshToken')
+  await axios.post(`${import.meta.env.VITE_API_ENDPOINT}api/auth/revoke`, {}, {
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
+    }
+  })
+  localStorage.removeItem('accessToken')
+  localStorage.removeItem('refreshToken')
+  await router.push('/login')
 }
-
-// Other TypeScript types
 ```
 
 ### auth/google.ts
 
 ```typescript
-import { googleToolkit } from 'vue3-google-login'
+import { setTokens } from './index'
+import http from '../api'
+import router from '@/router'
 
-export const initGoogleAuth = () => {
-  googleToolkit.load().then(() => {
-    googleToolkit.init({
-      clientId: import.meta.env.VITE_APP_GOOGLE_CLIENT_ID,
-    })
+async function checkEmail(name: string, email: string, credential: string) {
+  const response = await http({
+    url: 'api/user/check',
+    method: 'POST',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+    data: {
+      isGoogleLogin: true,
+      email: email,
+      name: name,
+      credential: credential,
+    },
   })
-}
 
-export const signInWithGoogle = () => {
-  return new Promise((resolve, reject) => {
-    googleToolkit.signIn().then(
-      (user) => {
-        resolve(user)
-      },
-      (error) => {
-        reject(error)
+  const data = response.data
+  if (data.success && data.response.tokens) {
+    const { accessToken, refreshToken } = data.response.tokens
+    setTokens(accessToken, refreshToken)
+    localStorage.setItem('userData', JSON.stringify({
+      "name": data.response.name,
+      "unique_id": data.response.id
+    }))
+    
+    if (data.success) {
+      if (!data.response.exists) {
+        router.push('/logout')
+        return
+      } else {
+        router.push('/results')
       }
-    )
-  })
+    }
+  }
+
+  return data
 }
 
-// Other Google authentication functions
+export { checkEmail }
+```
+
+## Service Features
+
+### API Service
+- Configurable base URL from environment variables
+- Automatic token management
+- Request/response interceptors
+- Token refresh handling
+- Error handling and logging
+
+### Authentication Service
+- Token management (set/remove)
+- Google OAuth integration
+- User session handling
+- Automatic redirection based on auth state
+- Token revocation on logout
+
+### Type System
+- Generic API response type
+- Type safety for API responses
+- Consistent error handling structure
