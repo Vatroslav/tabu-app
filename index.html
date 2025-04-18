@@ -6,6 +6,14 @@
   <link rel="icon" href="/favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tabu App</title>
+  <script>
+    // Only load Cookiebot in production environment (app.tabu.hr)
+    // Excludes test environments (test.app.tabu.hr) and other subdomains
+    if (window.location.hostname === 'app.tabu.hr') {
+      document.write('<script src="https://web.cmp.usercentrics.eu/modules/autoblocker.js"><\/script>');
+      document.write('<script id="usercentrics-cmp" src="https://web.cmp.usercentrics.eu/ui/loader.js" data-settings-id="V8HrXrglpE-toH" async><\/script>');
+    }
+  </script>
 </head>
 
 <body>
