@@ -53,6 +53,12 @@ onUnmounted(() => {
   transform: translateX(0);
 }
 
+@media (min-width: 768px) {
+  .logo {
+    display: none;
+  }
+}
+
 main {
   position: relative;
   z-index: 1;
