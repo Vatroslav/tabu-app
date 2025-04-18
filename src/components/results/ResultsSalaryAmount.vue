@@ -17,6 +17,7 @@ export default defineComponent({
         <p class="salaries-amount-number" id="amount-of-salaries">{{ dataAmount }}</p>
         <p class="salaries-amount-label">salaries in this filter</p>
         <p class="salaries-amount-note">Modify the filters to change the salaries you're compared to.</p>
+        <p class="salaries-amount-refresh-note"><strong>NOTE:</strong> Data is refreshed every 1 hour.</p>
     </div>
 </template>
 
@@ -42,6 +43,12 @@ export default defineComponent({
     margin-top: 0;
 }
 
+.salaries-amount-refresh-note {
+    font-weight: 300;
+    margin-top: 0;
+    font-style: italic;
+}
+
 @media (min-width: 768px) {
     .salaries-amount-number {
         font-size: 48px;
@@ -53,6 +60,11 @@ export default defineComponent({
 
     .salaries-amount-note {
         font-size: 14px;
+    }
+
+    .salaries-amount-refresh-note {
+        font-size: 14px;
+        margin-top: 55px;
     }
 }
 
@@ -67,6 +79,11 @@ export default defineComponent({
 
     .salaries-amount-note {
         font-size: 12px;
+    }
+
+    .salaries-amount-refresh-note {
+        font-size: 12px;
+        margin-top: 30px;
     }
 }
 </style> 
