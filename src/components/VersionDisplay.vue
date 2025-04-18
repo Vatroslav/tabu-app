@@ -9,48 +9,42 @@ defineProps<{
 
 <template>
   <div class="version-display" :class="position">
-    <span v-if="showLabel">Version</span>
+    <span v-if="showLabel">Tabu app v</span>
     {{ APP_VERSION }}
   </div>
 </template>
 
 <style scoped>
 .version-display {
-  font-size: 0.8em;
-  color: #666;
-  padding: 4px 8px;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
+  color: #000000;
   display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
-.version-display.top {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+@media (min-width: 768px) {
+  .version-display {
+    font-size: 14px;
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
 }
 
-.version-display.bottom {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  transform: none;
-}
-
-.version-display.left {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.version-display.right {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+@media (max-width: 768px) {
+  .version-display {
+    font-size: 12px;
+    position: absolute;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
 }
 </style> 
