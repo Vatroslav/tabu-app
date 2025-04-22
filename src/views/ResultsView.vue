@@ -383,6 +383,7 @@ export default defineComponent({
 </script>
 
 <template>
+    <img src="/tabu_big_logo_results.svg" alt="Tabu Logo" class="big-logo-desktop" />
     <div class="page-container">
         <NavbarItem />
         <div class="results">
@@ -423,6 +424,7 @@ export default defineComponent({
             <div class="version-display-container">
                 <VersionDisplay position="bottom" show-label />
             </div>
+            <img src="/tabu_big_logo_mobile.svg" alt="Tabu Logo" class="big-logo-mobile" />
         </div>
     </div>
 </template>
@@ -474,7 +476,30 @@ h1::after {
     margin-bottom: 5vh;
 }
 
+.big-logo-desktop {
+  position: absolute;
+  right: 0;
+  top: 0;
+  max-height: 100vh;
+  max-width: 100vw;
+  z-index: -1;
+}
+
+.big-logo-mobile {
+    width: 100%;
+    object-fit: cover;
+    margin-top: auto;
+    z-index: -1;
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+}
+
 @media (min-width: 768px) {
+    .big-logo-mobile {
+        display: none;
+    }
+
     h1 {
         font-size: 48px;
     }
@@ -489,12 +514,23 @@ h1::after {
 }
 
 @media (max-width: 768px) {
+    .big-logo-desktop {
+        display: none;
+    }
+
     h1 {
         font-size: 24px;
     }
 
     h1::after {
         height: 5px;
+    }
+
+    .results {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 97px);
+        position: relative;
     }
 }
 </style>

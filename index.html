@@ -31,9 +31,6 @@
 <body>
   <div class="container">
     <div id="app"></div>
-    <img src="tabu_big_logo.svg" alt="Tabu Logo" class="big-logo" />
-    <!-- The logo is modified so that it doesn't pass over the navbar -->
-    <img src="tabu_big_logo_mobile.svg" alt="Tabu Logo" class="big-logo-mobile" />
   </div>
   <script type="module" src="/src/main.ts"></script>
 </body>
@@ -69,33 +66,5 @@
 
   #app {
     flex: 1;
-  }
-
-  .big-logo {
-    position: absolute;
-    right: 0;
-    top: 0;
-    max-height: 100vh;
-    max-width: 100vw;
-    z-index: -1;
-  }
-
-  .big-logo-mobile {
-    width: 100%;
-    object-fit: cover;
-    padding-top: 50px;
-    z-index: -1;
-  }
-
-  @media (max-width: 768px) {
-    .big-logo {
-      display: none;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .big-logo-mobile {
-      display: none;
-    }
   }
 </style>

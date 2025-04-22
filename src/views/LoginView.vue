@@ -25,7 +25,8 @@ onUnmounted(() => {
     <main>
       <Login />
     </main>
-    <img src="/tabu_big_logo_mobile.svg" alt="Tabu Logo" class="logo" />
+    <img src="/tabu_big_logo_login.svg" alt="Tabu Logo" class="big-logo-desktop" />
+    <img src="/tabu_big_logo_mobile.svg" alt="Tabu Logo" class="big-logo-mobile" />
     <VersionDisplay position="bottom" show-label />
   </div>
 </template>
@@ -40,7 +41,16 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-.logo {
+.big-logo-desktop {
+  position: absolute;
+  right: 0;
+  top: 0;
+  max-height: 100vh;
+  max-width: 100vw;
+  z-index: -1;
+}
+
+.big-logo-mobile {
   width: 100%;
   max-width: 360px;
   height: auto;
@@ -53,8 +63,14 @@ onUnmounted(() => {
   transform: translateX(0);
 }
 
+@media (max-width: 768px) {
+  .big-logo-desktop {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) {
-  .logo {
+  .big-logo-mobile {
     display: none;
   }
 }
