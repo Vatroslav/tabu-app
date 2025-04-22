@@ -422,7 +422,7 @@ export default defineComponent({
                 :diff-user-to-median-display="diffUserToMedianDisplay"
             />
             <div class="version-display-container">
-                <VersionDisplay position="bottom" show-label />
+                <VersionDisplay context="results" show-label />
             </div>
             <img src="/tabu_big_logo_mobile.svg" alt="Tabu Logo" class="big-logo-mobile" />
         </div>

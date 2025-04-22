@@ -27,7 +27,7 @@ onUnmounted(() => {
     </main>
     <img src="/tabu_big_logo_login.svg" alt="Tabu Logo" class="big-logo-desktop" />
     <img src="/tabu_big_logo_mobile.svg" alt="Tabu Logo" class="big-logo-mobile" />
-    <VersionDisplay position="bottom" show-label />
+    <VersionDisplay context="login" show-label />
   </div>
 </template>
 
