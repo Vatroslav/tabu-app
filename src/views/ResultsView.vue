@@ -437,7 +437,6 @@ export default defineComponent({
 }
 
 .results {
-    margin-top: 97px;
     text-align: left;
     padding-left: 20px;
     flex: 1;
@@ -445,6 +444,7 @@ export default defineComponent({
     flex-direction: column;
     position: relative;
     padding-bottom: 60px;
+    margin-top: 88px; /* Match navbar height for desktop */
 }
 
 .version-display-container {
@@ -458,6 +458,7 @@ h1 {
     position: relative;
     display: inline-block;
     margin-bottom: 1vh;
+    z-index: 1;
 }
 
 h1::after {
@@ -531,6 +532,7 @@ h1::after {
         flex-direction: column;
         min-height: calc(100vh - 97px);
         position: relative;
+        margin-top: 60px; /* Match navbar height for mobile */
     }
 }
 </style>
