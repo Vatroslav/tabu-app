@@ -383,55 +383,49 @@ export default defineComponent({
 </script>
 
 <template>
+    <img src="/tabu_big_logo_results.svg" alt="Tabu Logo" class="big-logo-desktop" />
     <div class="page-container">
-        <img src="/tabu_big_logo_results.svg" alt="Tabu Logo" class="big-logo-desktop" />
         <NavbarItem />
-        <main class="results">
-            <div class="results__header">
-                <h1>My salary comparison</h1>
+        <div class="results">
+            <h1>My salary comparison</h1>
+            <div class="overall-filter-section">
+                <ResultsFilters
+                    :submission-data="submissionData"
+                    :additional-position-data="additionalPositionData"
+                    :selected-position="selectedPosition"
+                    :selected-seniorities="selectedSeniorities"
+                    :has-tech-options="hasTechOptions"
+                    :tech-options="techOptions"
+                    :selected-tech="selectedTech"
+                    :country-salary-options="countrySalaryOptions"
+                    :selected-countries="selectedCountries"
+                    :selected-contract-types="selectedContractTypes"
+                    :contrac-type-options="contracTypeOptions"
+                    @update:selectedPosition="selectedPosition = $event"
+                    @update:selectedSeniorities="selectedSeniorities = $event"
+                    @update:selectedTech="selectedTech = $event"
+                    @update:countrySalary="submissionData.country_salary = $event"
+                    @update:selectedCountries="selectedCountries = $event"
+                    @update:contractType="submissionData.contract_type = $event"
+                    @update:selectedContractTypes="selectedContractTypes = $event"
+                />
+                <ResultsSalaryAmount :data-amount="dataAmount" />
             </div>
-            <div class="results__content">
-                <div class="results__filters">
-                    <ResultsFilters
-                        :submission-data="submissionData"
-                        :additional-position-data="additionalPositionData"
-                        :selected-position="selectedPosition"
-                        :selected-seniorities="selectedSeniorities"
-                        :has-tech-options="hasTechOptions"
-                        :tech-options="techOptions"
-                        :selected-tech="selectedTech"
-                        :country-salary-options="countrySalaryOptions"
-                        :selected-countries="selectedCountries"
-                        :selected-contract-types="selectedContractTypes"
-                        :contrac-type-options="contracTypeOptions"
-                        @update:selectedPosition="selectedPosition = $event"
-                        @update:selectedSeniorities="selectedSeniorities = $event"
-                        @update:selectedTech="selectedTech = $event"
-                        @update:countrySalary="submissionData.country_salary = $event"
-                        @update:selectedCountries="selectedCountries = $event"
-                        @update:contractType="submissionData.contract_type = $event"
-                        @update:selectedContractTypes="selectedContractTypes = $event"
-                    />
-                    <ResultsSalaryAmount :data-amount="dataAmount" />
-                </div>
-                <div class="results__comparison">
-                    <ResultsSalaryComparison
-                        :salary-data="salaryData"
-                        :salary-average_net="salaryAverage_net"
-                        :salary-median_net="salaryMedian_net"
-                        :formatted-user-salary_net="formattedUserSalary_net"
-                        :formatted-market-salary-average_net="formattedMarketSalaryAverage_net"
-                        :formatted-market-salary-median_net="formattedMarketSalaryMedian_net"
-                        :diff-user-to-average-display="diffUserToAverageDisplay"
-                        :diff-user-to-median-display="diffUserToMedianDisplay"
-                    />
-                </div>
-            </div>
-            <footer class="results__footer">
+            <ResultsSalaryComparison
+                :salary-data="salaryData"
+                :salary-average_net="salaryAverage_net"
+                :salary-median_net="salaryMedian_net"
+                :formatted-user-salary_net="formattedUserSalary_net"
+                :formatted-market-salary-average_net="formattedMarketSalaryAverage_net"
+                :formatted-market-salary-median_net="formattedMarketSalaryMedian_net"
+                :diff-user-to-average-display="diffUserToAverageDisplay"
+                :diff-user-to-median-display="diffUserToMedianDisplay"
+            />
+            <div class="version-display-container">
                 <VersionDisplay context="results" show-label />
-                <img src="/tabu_big_logo_mobile.svg" alt="Tabu Logo" class="big-logo-mobile" />
-            </footer>
-        </main>
+            </div>
+            <img src="/tabu_big_logo_mobile.svg" alt="Tabu Logo" class="big-logo-mobile" />
+        </div>
     </div>
 </template>
 
@@ -440,51 +434,30 @@ export default defineComponent({
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    position: relative;
 }
 
 .results {
     margin-top: 97px;
     text-align: left;
-    padding: 0 20px;
+    padding-left: 20px;
     flex: 1;
     display: flex;
     flex-direction: column;
     position: relative;
+    padding-bottom: 60px;
 }
 
-.results__header {
-    margin-bottom: 2rem;
-}
-
-.results__content {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    flex: 1;
-}
-
-.results__filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.results__comparison {
-    flex: 1;
-}
-
-.results__footer {
-    margin-top: auto;
-    padding: 2rem 0;
-    position: relative;
+.version-display-container {
+    margin-top: 50px;
 }
 
 h1 {
+    align-self: flex-start;
     font-weight: 600;
     color: #333;
     position: relative;
     display: inline-block;
+    margin-bottom: 1vh;
 }
 
 h1::after {
@@ -497,22 +470,29 @@ h1::after {
     background-color: #D9FF80;
 }
 
+.overall-filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 5vh;
+}
+
 .big-logo-desktop {
-    position: absolute;
-    right: 0;
-    top: 0;
-    max-height: 100vh;
-    max-width: 100vw;
-    z-index: -1;
+  position: absolute;
+  right: 0;
+  top: 0;
+  max-height: 100vh;
+  max-width: 100vw;
+  z-index: -1;
 }
 
 .big-logo-mobile {
     width: 100%;
     object-fit: cover;
+    margin-top: auto;
+    z-index: -1;
     position: absolute;
     bottom: -10px;
     left: 0;
-    z-index: -1;
 }
 
 @media (min-width: 768px) {
@@ -527,6 +507,10 @@ h1::after {
     h1::after {
         height: 10px;
     }
+
+    .overall-filter-section {
+        margin-top: 50px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -540,6 +524,13 @@ h1::after {
 
     h1::after {
         height: 5px;
+    }
+
+    .results {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 97px);
+        position: relative;
     }
 }
 </style>
