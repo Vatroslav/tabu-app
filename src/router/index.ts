@@ -19,15 +19,7 @@ const router = createRouter({
     {
       path: '/logout',
       name: 'logout',
-      beforeEnter: async (to, from, next) => {
-        try {
-          await handleLogout()
-          next({ name: 'login' })
-        } catch (error) {
-          console.error('Error during logout:', error)
-          next({ name: 'login' })
-        }
-      }
+      redirect: '/login'
     },
   ],
 })
