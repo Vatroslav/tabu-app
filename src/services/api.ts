@@ -34,7 +34,7 @@ const createApiInstance = () => {
         originalRequest._retry = true
         const refreshToken = localStorage.getItem('refreshToken')
         try {
-          const refreshResponse = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/api/auth/refresh-token`, {
+          const refreshResponse = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}api/auth/refresh-token`, {
             refreshToken,
           })
           setTokens(refreshResponse.data.accessToken, refreshResponse.data.refreshToken)
