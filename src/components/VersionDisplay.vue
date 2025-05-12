@@ -63,7 +63,6 @@ defineProps<{
 
   .version-display.results {
     font-size: 12px;
-    bottom: 120px;
   }
 }
 </style> 

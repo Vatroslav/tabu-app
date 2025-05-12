@@ -18,6 +18,7 @@ import axios from 'axios';
 import ResultsFilters from '@/components/results/ResultsFilters.vue';
 import ResultsSalaryAmount from '@/components/results/ResultsSalaryAmount.vue';
 import ResultsSalaryComparison from '@/components/results/ResultsSalaryComparison.vue';
+import Footer from '@/components/Footer.vue';
 import type { TechOption, CountrySalaryOption, ContractTypeOption } from '@/types/results';
 import VersionDisplay from '../components/VersionDisplay.vue';
 
@@ -33,6 +34,7 @@ export default defineComponent({
         ResultsFilters,
         ResultsSalaryAmount,
         ResultsSalaryComparison,
+        Footer,
         VersionDisplay
     },
     setup() {
@@ -421,10 +423,7 @@ export default defineComponent({
                 :diff-user-to-average-display="diffUserToAverageDisplay"
                 :diff-user-to-median-display="diffUserToMedianDisplay"
             />
-            <div class="version-display-container">
-                <VersionDisplay context="results" show-label />
-            </div>
-            <img src="/tabu_footer_logo.svg" alt="Tabu Logo" class="big-logo-mobile" />
+            <Footer />
         </div>
     </div>
 </template>
