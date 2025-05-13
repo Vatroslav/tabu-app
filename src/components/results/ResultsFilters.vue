@@ -109,7 +109,7 @@ export default defineComponent({
                 } else if (!additionalPositionHasSeniorities.value) {
                     emit('update:selectedSeniorities', []);
                 }
-            } else if (newPosition === 'my_position') {
+            } else if (newPosition === 'my_position' || newPosition === 'other_positions_in_department') {
                 if (props.submissionData.seniority === 'N/A') {
                     emit('update:selectedSeniorities', []);
                 } else {
@@ -208,19 +208,19 @@ export default defineComponent({
             <label class="filter-label">Seniority:</label>
             <div class="seniority-group">
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Junior') }"
-                    :disabled="selectedPosition === 'my_position' ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    :disabled="(selectedPosition === 'my_position' || selectedPosition === 'other_positions_in_department') ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
                     @click="toggleSeniority('Junior')">
                     Junior
                 </button>
 
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Middle') }"
-                    :disabled="selectedPosition === 'my_position' ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    :disabled="(selectedPosition === 'my_position' || selectedPosition === 'other_positions_in_department') ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
                     @click="toggleSeniority('Middle')">
                     Middle
                 </button>
 
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Senior') }"
-                    :disabled="selectedPosition === 'my_position' ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    :disabled="(selectedPosition === 'my_position' || selectedPosition === 'other_positions_in_department') ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
                     @click="toggleSeniority('Senior')">
                     Senior
                 </button>
