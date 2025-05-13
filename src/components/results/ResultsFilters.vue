@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, watch } from 'vue'
 import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption } from '@/types/results';
 import Multiselect from 'vue-multiselect'
 
@@ -66,6 +66,18 @@ export default defineComponent({
     },
     emits: ['update:selectedPosition', 'update:selectedSeniorities', 'update:selectedTech', 'update:countrySalary', 'update:contractType', 'update:selectedCountries', 'update:selectedContractTypes'],
     setup(props, { emit }) {
+        const positionsWithoutSeniorities = [
+            'Head of team or department',
+            'Founder or co-founder',
+            'C-suite',
+            'Engineering Manager'
+        ];
+
+        const additionalPositionHasSeniorities = computed(() => {
+            return props.additionalPositionData.additional_position_group !== '' && 
+                   !positionsWithoutSeniorities.includes(props.additionalPositionData.additional_position_group);
+        });
+
         const positionOptions = computed<PositionOption[]>(() => {
             const options: PositionOption[] = [
                 {
@@ -87,6 +99,23 @@ export default defineComponent({
             }
 
             return options;
+        });
+
+        // Update watcher for selectedPosition
+        watch(() => props.selectedPosition, (newPosition) => {
+            if (newPosition === 'additional_position') {
+                if (additionalPositionHasSeniorities.value && props.submissionData.seniority === 'N/A') {
+                    emit('update:selectedSeniorities', ['Junior', 'Middle', 'Senior']);
+                } else if (!additionalPositionHasSeniorities.value) {
+                    emit('update:selectedSeniorities', []);
+                }
+            } else if (newPosition === 'my_position') {
+                if (props.submissionData.seniority === 'N/A') {
+                    emit('update:selectedSeniorities', []);
+                } else {
+                    emit('update:selectedSeniorities', [props.submissionData.seniority]);
+                }
+            }
         });
 
         const techDropdownOptions = computed<DropdownOption[]>(() => {
@@ -155,7 +184,8 @@ export default defineComponent({
             handleCountriesUpdate,
             handleContractTypesUpdate,
             showCountryWarning,
-            showContractWarning
+            showContractWarning,
+            additionalPositionHasSeniorities
         }
     }
 })
@@ -178,17 +208,20 @@ export default defineComponent({
             <label class="filter-label">Seniority:</label>
             <div class="seniority-group">
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Junior') }"
-                    :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Junior')">
+                    :disabled="selectedPosition === 'my_position' ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    @click="toggleSeniority('Junior')">
                     Junior
                 </button>
 
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Middle') }"
-                    :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Middle')">
+                    :disabled="selectedPosition === 'my_position' ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    @click="toggleSeniority('Middle')">
                     Middle
                 </button>
 
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Senior') }"
-                    :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Senior')">
+                    :disabled="selectedPosition === 'my_position' ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    @click="toggleSeniority('Senior')">
                     Senior
                 </button>
             </div>
