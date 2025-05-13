@@ -73,9 +73,30 @@ export default defineComponent({
             'Engineering Manager'
         ];
 
+        const positionsWithTechnologies = [
+            'BI / Data / Database',
+            'Design',
+            'DevOps / Network / Security / System',
+            'Development / QA',
+            'Hardware',
+            'Sales / Customer Experience'
+        ];
+
         const additionalPositionHasSeniorities = computed(() => {
             return props.additionalPositionData.additional_position_group !== '' && 
                    !positionsWithoutSeniorities.includes(props.additionalPositionData.additional_position_group);
+        });
+
+        const positionGroupHasTechnologies = (positionGroup: string) => {
+            return positionsWithTechnologies.includes(positionGroup);
+        };
+
+        const userPositionHasTechnologies = computed(() => {
+            return positionGroupHasTechnologies(props.submissionData.position_group);
+        });
+
+        const additionalPositionHasTechnologies = computed(() => {
+            return positionGroupHasTechnologies(props.additionalPositionData.additional_position_group);
         });
 
         const positionOptions = computed<PositionOption[]>(() => {
@@ -108,6 +129,9 @@ export default defineComponent({
                     emit('update:selectedSeniorities', ['Junior', 'Middle', 'Senior']);
                 } else if (!additionalPositionHasSeniorities.value) {
                     emit('update:selectedSeniorities', []);
+                }
+                if (!additionalPositionHasTechnologies.value && userPositionHasTechnologies.value) {
+                    emit('update:selectedTech', []);
                 }
             } else if (newPosition === 'my_position' || newPosition === 'other_positions_in_department') {
                 if (props.submissionData.seniority === 'N/A') {
@@ -185,7 +209,9 @@ export default defineComponent({
             handleContractTypesUpdate,
             showCountryWarning,
             showContractWarning,
-            additionalPositionHasSeniorities
+            additionalPositionHasSeniorities,
+            userPositionHasTechnologies,
+            additionalPositionHasTechnologies
         }
     }
 })
@@ -233,9 +259,9 @@ export default defineComponent({
                 :model-value="selectedTech.map(tech => ({ value: tech, label: tech }))"
                 :options="techDropdownOptions"
                 :multiple="true"
-                :disabled="!hasTechOptions"
-                :class="{ disabled: !hasTechOptions }"
-                :placeholder="hasTechOptions ? 'Select technologies' : 'No technology'"
+                :disabled="selectedPosition === 'additional_position' ? !additionalPositionHasTechnologies : !hasTechOptions"
+                :class="{ disabled: selectedPosition === 'additional_position' ? !additionalPositionHasTechnologies : !hasTechOptions }"
+                :placeholder="(selectedPosition === 'additional_position' ? !additionalPositionHasTechnologies : !hasTechOptions) ? 'No technology' : 'Select technologies'"
                 @update:modelValue="handleTechUpdate"
                 track-by="value"
                 label="label"
