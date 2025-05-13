@@ -155,7 +155,7 @@ export default defineComponent({
         };
 
         const handleTechUpdate = (value: any) => {
-            emit('update:selectedTech', value);
+            emit('update:selectedTech', value.map((item: any) => item.value));
         };
 
         const handleCountriesUpdate = (value: any) => {
@@ -230,7 +230,7 @@ export default defineComponent({
         <div class="filter-row">
             <label for="technology" class="filter-label">Technology:</label>
             <Multiselect
-                :model-value="selectedTech"
+                :model-value="selectedTech.map(tech => ({ value: tech, label: tech }))"
                 :options="techDropdownOptions"
                 :multiple="true"
                 :disabled="!hasTechOptions"
