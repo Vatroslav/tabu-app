@@ -396,6 +396,7 @@ export default defineComponent({
 
     .filter-row .input-field {
         min-width: 200px;
+        font-size: 12px;
     }
 
     .seniority-btn {
@@ -404,6 +405,7 @@ export default defineComponent({
 
     :deep(.multiselect) {
         min-width: 200px;
+        font-size: 12px;
     }
 
     :deep(.multiselect__tags) {
@@ -457,6 +459,10 @@ export default defineComponent({
     :deep(.multiselect__element) {
         font-size: 12px;
         width: 100%;
+    }
+
+    select.input-field {
+        font-size: 12px;
     }
 }
 
