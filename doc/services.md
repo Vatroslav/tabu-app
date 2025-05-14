@@ -125,7 +125,8 @@ async function checkEmail(name: string, email: string, credential: string) {
     setTokens(accessToken, refreshToken)
     localStorage.setItem('userData', JSON.stringify({
       "name": data.response.name,
-      "unique_id": data.response.id
+      "unique_id": data.response.id,
+      "needs_to_update": data.response.needs_to_update
     }))
     
     if (data.success) {
@@ -159,6 +160,7 @@ export { checkEmail }
 - User session handling
 - Automatic redirection based on auth state
 - Token revocation on logout
+- Checks if the user needs to update their data
 
 ### Type System
 - Generic API response type
