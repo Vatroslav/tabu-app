@@ -423,8 +423,8 @@ export default defineComponent({
                 :diff-user-to-average-display="diffUserToAverageDisplay"
                 :diff-user-to-median-display="diffUserToMedianDisplay"
             />
-            <Footer />
         </div>
+        <Footer />
     </div>
 </template>
 

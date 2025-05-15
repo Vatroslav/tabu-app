@@ -12,13 +12,18 @@ export default defineComponent({
 
 <template>
     <footer class="footer">
-        <div class="version-display-container">
-            <div class="version-info">
-                <div class="version-block">
-                    <VersionDisplay context="results" show-label />
-                </div>
-                <div class="release-link-block">
-                    <a href="https://github.com/tabu-hr/tabu-app/wiki/Release-notes" target="_blank" rel="noopener noreferrer" class="release-notes-link">Release notes</a>
+        <div class="footer-content">
+            <div class="looker-info">
+                <p>Looking for more data? You can still access additional insights in <a href="https://results.tabu.hr/" target="_blank" rel="noopener noreferrer">Looker Studio</a>.</p>
+            </div>
+            <div class="version-display-container">
+                <div class="version-info">
+                    <div class="version-block">
+                        <VersionDisplay context="results" show-label />
+                    </div>
+                    <div class="release-link-block">
+                        <a href="https://github.com/tabu-hr/tabu-app/wiki/Release-notes" target="_blank" rel="noopener noreferrer" class="release-notes-link">Release notes</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,6 +45,19 @@ export default defineComponent({
     bottom: -75px;
     left: 0;
     z-index: -1;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+}
+
+.looker-info {
+    font-size: 14px;
+    max-width: 600px;
+    margin-top: 200px;
 }
 
 .version-info {
@@ -67,6 +85,19 @@ export default defineComponent({
 }
 
 @media (max-width: 769px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+    }
+
+    .looker-info {
+        margin-top: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 12px;
+    }
+
     .version-display-container {
         margin-bottom: 50px;
         margin-top: 20px;
