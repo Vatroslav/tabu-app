@@ -17,9 +17,6 @@ defineProps<{
 <style scoped>
 .version-display {
   color: #000000;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .version-display.login {
@@ -28,16 +25,20 @@ defineProps<{
   transform: translateX(-50%);
   width: 100%;
   text-align: center;
+  display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .version-display.results {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  text-align: center;
-  justify-content: center;
+  position: static;
+  width: auto;
+  text-align: right;
+  display: block;
+}
+
+.version-display span {
+  white-space: nowrap;
 }
 
 @media (min-width: 768px) {
@@ -48,10 +49,12 @@ defineProps<{
 
   .version-display.results {
     font-size: 14px;
-    right: 35px;
+    right: auto;
     left: auto;
     transform: none;
     width: auto;
+    text-align: right;
+    display: block;
   }
 }
 
@@ -63,6 +66,10 @@ defineProps<{
 
   .version-display.results {
     font-size: 12px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style> 
