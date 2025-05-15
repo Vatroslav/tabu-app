@@ -36,6 +36,7 @@ export default defineComponent({
     margin-top: auto;
     position: relative;
     width: 100%;
+    padding-bottom: 60px;
 }
 
 .footer-logo {
