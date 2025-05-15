@@ -3,7 +3,6 @@
         <img src="/tabu_small_logo_app.svg" alt="Tabu Logo" class="small-logo-app" />
         <div class="nav-right">
             <button @click="handleLogout" class="logout-button">Logout</button>
-            <div class="green-box"></div>
         </div>
     </nav>
 </template>
@@ -30,13 +29,6 @@ nav {
     height: 100%;
 }
 
-.green-box { /* Right side of the navbar - part of the logo, visible only on desktop */
-    display: none;
-    width: 50px;
-    background-color: #D9FF80;
-    height: 100%;
-}
-
 .logout-button {
     background: none;
     border: none;
@@ -45,7 +37,6 @@ nav {
     font-weight: 500;
     text-decoration: underline;
     cursor: pointer;
-    margin-right: 20px;
     padding: 0;
     position: relative;
     z-index: 1;
@@ -77,11 +68,7 @@ nav {
 
     .logout-button {
         font-size: 18px;
-        margin-right: 20px;
-    }
-
-    .green-box {
-        display: block;
+        margin-right: 80px;
     }
 }
 

@@ -25,7 +25,8 @@ async function checkEmail(name: string, email: string, credential: string) {
     setTokens(accessToken, refreshToken)
     localStorage.setItem('userData', JSON.stringify({
       "name": data.response.name,
-      "unique_id": data.response.id
+      "unique_id": data.response.id,
+      "needs_to_update": data.response.needs_to_update
     }))
     // Remove tokens from response data before returning
     delete data.response.tokens

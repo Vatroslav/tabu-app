@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, watch } from 'vue'
 import type { TechOption, CountrySalaryOption, ContractTypeOption, PositionOption } from '@/types/results';
 import Multiselect from 'vue-multiselect'
 
@@ -66,6 +66,39 @@ export default defineComponent({
     },
     emits: ['update:selectedPosition', 'update:selectedSeniorities', 'update:selectedTech', 'update:countrySalary', 'update:contractType', 'update:selectedCountries', 'update:selectedContractTypes'],
     setup(props, { emit }) {
+        const positionsWithoutSeniorities = [
+            'Head of team or department',
+            'Founder or co-founder',
+            'C-suite',
+            'Engineering Manager'
+        ];
+
+        const positionsWithTechnologies = [
+            'BI / Data / Database',
+            'Design',
+            'DevOps / Network / Security / System',
+            'Development / QA',
+            'Hardware',
+            'Sales / Customer Experience'
+        ];
+
+        const additionalPositionHasSeniorities = computed(() => {
+            return props.additionalPositionData.additional_position_group !== '' && 
+                   !positionsWithoutSeniorities.includes(props.additionalPositionData.additional_position_group);
+        });
+
+        const positionGroupHasTechnologies = (positionGroup: string) => {
+            return positionsWithTechnologies.includes(positionGroup);
+        };
+
+        const userPositionHasTechnologies = computed(() => {
+            return positionGroupHasTechnologies(props.submissionData.position_group);
+        });
+
+        const additionalPositionHasTechnologies = computed(() => {
+            return positionGroupHasTechnologies(props.additionalPositionData.additional_position_group);
+        });
+
         const positionOptions = computed<PositionOption[]>(() => {
             const options: PositionOption[] = [
                 {
@@ -87,6 +120,26 @@ export default defineComponent({
             }
 
             return options;
+        });
+
+        // Update watcher for selectedPosition
+        watch(() => props.selectedPosition, (newPosition) => {
+            if (newPosition === 'additional_position') {
+                if (additionalPositionHasSeniorities.value && props.submissionData.seniority === 'N/A') {
+                    emit('update:selectedSeniorities', ['Junior', 'Middle', 'Senior']);
+                } else if (!additionalPositionHasSeniorities.value) {
+                    emit('update:selectedSeniorities', []);
+                }
+                if (!additionalPositionHasTechnologies.value && userPositionHasTechnologies.value) {
+                    emit('update:selectedTech', []);
+                }
+            } else if (newPosition === 'my_position' || newPosition === 'other_positions_in_department') {
+                if (props.submissionData.seniority === 'N/A') {
+                    emit('update:selectedSeniorities', []);
+                } else {
+                    emit('update:selectedSeniorities', [props.submissionData.seniority]);
+                }
+            }
         });
 
         const techDropdownOptions = computed<DropdownOption[]>(() => {
@@ -126,7 +179,7 @@ export default defineComponent({
         };
 
         const handleTechUpdate = (value: any) => {
-            emit('update:selectedTech', value);
+            emit('update:selectedTech', value.map((item: any) => item.value));
         };
 
         const handleCountriesUpdate = (value: any) => {
@@ -155,7 +208,10 @@ export default defineComponent({
             handleCountriesUpdate,
             handleContractTypesUpdate,
             showCountryWarning,
-            showContractWarning
+            showContractWarning,
+            additionalPositionHasSeniorities,
+            userPositionHasTechnologies,
+            additionalPositionHasTechnologies
         }
     }
 })
@@ -178,17 +234,20 @@ export default defineComponent({
             <label class="filter-label">Seniority:</label>
             <div class="seniority-group">
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Junior') }"
-                    :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Junior')">
+                    :disabled="(selectedPosition === 'my_position' || selectedPosition === 'other_positions_in_department') ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    @click="toggleSeniority('Junior')">
                     Junior
                 </button>
 
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Middle') }"
-                    :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Middle')">
+                    :disabled="(selectedPosition === 'my_position' || selectedPosition === 'other_positions_in_department') ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    @click="toggleSeniority('Middle')">
                     Middle
                 </button>
 
                 <button class="seniority-btn" :class="{ active: selectedSeniorities.includes('Senior') }"
-                    :disabled="submissionData.seniority === 'N/A'" @click="toggleSeniority('Senior')">
+                    :disabled="(selectedPosition === 'my_position' || selectedPosition === 'other_positions_in_department') ? submissionData.seniority === 'N/A' : !additionalPositionHasSeniorities"
+                    @click="toggleSeniority('Senior')">
                     Senior
                 </button>
             </div>
@@ -197,12 +256,12 @@ export default defineComponent({
         <div class="filter-row">
             <label for="technology" class="filter-label">Technology:</label>
             <Multiselect
-                :model-value="selectedTech"
+                :model-value="selectedTech.map(tech => ({ value: tech, label: tech }))"
                 :options="techDropdownOptions"
                 :multiple="true"
-                :disabled="!hasTechOptions"
-                :class="{ disabled: !hasTechOptions }"
-                :placeholder="hasTechOptions ? 'Select technologies' : 'No technology'"
+                :disabled="selectedPosition === 'additional_position' ? !additionalPositionHasTechnologies : !hasTechOptions"
+                :class="{ disabled: selectedPosition === 'additional_position' ? !additionalPositionHasTechnologies : !hasTechOptions }"
+                :placeholder="(selectedPosition === 'additional_position' ? !additionalPositionHasTechnologies : !hasTechOptions) ? 'No technology' : 'Select technologies'"
                 @update:modelValue="handleTechUpdate"
                 track-by="value"
                 label="label"
@@ -396,6 +455,7 @@ export default defineComponent({
 
     .filter-row .input-field {
         min-width: 200px;
+        font-size: 12px;
     }
 
     .seniority-btn {
@@ -404,6 +464,7 @@ export default defineComponent({
 
     :deep(.multiselect) {
         min-width: 200px;
+        font-size: 12px;
     }
 
     :deep(.multiselect__tags) {
@@ -457,6 +518,10 @@ export default defineComponent({
     :deep(.multiselect__element) {
         font-size: 12px;
         width: 100%;
+    }
+
+    select.input-field {
+        font-size: 12px;
     }
 }
 

@@ -21,18 +21,26 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    allowedHosts: true,
   }
 })
 ```
+
+Key features:
+- Vue and Vue DevTools plugins enabled
+- Path alias `@` pointing to `src` directory
+- Server configuration allowing all hosts
 
 ## TypeScript Configuration
 
 The project uses multiple `tsconfig` files for different environments:
 
-- **tsconfig.app.json**
-- **tsconfig.json**
-- **tsconfig.node.json**
-- **tsconfig.vitest.json**
+- **tsconfig.json**: Base TypeScript configuration
+- **tsconfig.app.json**: Application-specific TypeScript configuration
+- **tsconfig.node.json**: Node.js-specific TypeScript configuration
+- **tsconfig.vitest.json**: Testing-specific TypeScript configuration
 
 ## ESLint Configuration
 
@@ -57,7 +65,7 @@ export default [
 
   ...pluginVue.configs['flat/essential'],
   ...vueTsEslintConfig(),
-
+  
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
@@ -66,10 +74,25 @@ export default [
 ]
 ```
 
+Features:
+- Lints TypeScript and Vue files
+- Ignores build and coverage directories
+- Uses Vue, TypeScript, and Vitest plugins
+- Skips formatting (handled by Prettier)
+
 ## Environment Variables
 
 The `.env.example` file provides example environment variables:
 
 ```
+# Request from project owner or use your own client ID
 VITE_APP_GOOGLE_CLIENT_ID=<google_client_id>
+# Set to tabu-db-api backend server (defaults to default docker container)
 VITE_API_ENDPOINT=http://localhost:3001/
+```
+
+Additional configuration files:
+- **.env.d.ts**: TypeScript declarations for environment variables
+- **.prettierrc.json**: Prettier code formatting configuration
+- **.editorconfig**: Editor configuration for consistent coding styles
+- **vitest.config.ts**: Vitest testing framework configuration
