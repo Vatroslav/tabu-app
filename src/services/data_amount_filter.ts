@@ -4,9 +4,9 @@ import http from './api'
 async function dataAmountFilterCheck(
     position_group: string | null,
     position: string | null,
-    seniority: string | null,
-    country_salary: string | null,
-    contract_type: string | null,
+    seniority: string,
+    country_salary: string,
+    contract_type: string,
     tech: string | null
 ) {
     try {

@@ -246,6 +246,19 @@ export default defineComponent({
                     ? selectedContractTypes.value.join('|')
                     : null
 
+                // don't call backend APIs with certain failure (quick fix)
+                if (
+                    chosenContractType == null ||
+                    chosenCountrySalary == null ||
+                    chosenSeniority == 'N/A'
+                ) {
+                    console.warn('Please select all required fields.')
+                    dataAmount.value = 0
+                    salaryAverage_net.value = 0
+                    salaryMedian_net.value = 0
+                    return
+                    // throw new Error('Please check required fields')
+                }
                 const api_response = await dataAmountFilterCheck(
                     chosenDepartment,
                     chosenPosition,
