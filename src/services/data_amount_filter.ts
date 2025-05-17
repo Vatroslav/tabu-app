@@ -15,8 +15,9 @@ async function dataAmountFilterCheck(
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Allow-Methods':
+                    'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization'
             },
             data: {
                 parameter_position_group: position_group,
@@ -25,7 +26,7 @@ async function dataAmountFilterCheck(
                 parameter_country_salary: country_salary,
                 parameter_contract_type: contract_type,
                 parameter_tech: tech
-            },
+            }
         })
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -40,8 +41,11 @@ async function dataAmountFilterCheck(
                     }
                 }
             }
-            if (error.response?.status === 500 && 
-                error.response?.data?.message === 'No data found for the provided filters') {
+            if (
+                error.response?.status === 500 &&
+                error.response?.data?.message ===
+                    'No data found for the provided filters'
+            ) {
                 return {
                     data: {
                         success: false,
