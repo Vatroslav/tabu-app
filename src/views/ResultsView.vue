@@ -249,8 +249,7 @@ export default defineComponent({
                 // don't call backend APIs with certain failure (quick fix)
                 if (
                     chosenContractType == null ||
-                    chosenCountrySalary == null ||
-                    chosenSeniority == 'N/A'
+                    chosenCountrySalary == null
                 ) {
                     console.warn('Please select all required fields.')
                     dataAmount.value = 0
