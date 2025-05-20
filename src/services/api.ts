@@ -4,7 +4,7 @@ import { setTokens, logout } from './auth'
 const createApiInstance = () => {
     const instance = axios.create({
         baseURL: import.meta.env.VITE_API_ENDPOINT,
-        timeout: 2000,
+        timeout: 5000,
         headers: { 'X-Custom-Header': 'foobar' }
     })
 
